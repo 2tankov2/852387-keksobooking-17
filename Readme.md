@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Татьяна Смирнова](https://up.htmlacademy.ru/javascript/17/user/852387).
-* Наставник: `Неизвестно`.
+* Наставник: [Егор Король](https://up.htmlacademy.ru/javascript/17/user/501115).
 
 ---
 
