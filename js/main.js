@@ -13,7 +13,7 @@ var getData = function (count) {
 
     var item = {
       autor: {
-        avatar: `img/avatars/user0${i++}.png`
+        avatar: 'img/avatars/user0' + i + '.png'
       },
       offer: {
         type: types[random(0, types.length)]
@@ -40,11 +40,9 @@ var newPinTemplate = pinTemplate.querySelector('.map__pin');
 
 for (var i = 0; i < declarationData.length; i++) {
   var pinElement = newPinTemplate.cloneNode(true);
-  pinElement.style = `left: ${declarationData.location.x}px; top: ${declarationData.location.y}px;`;
-  pinElement.img.src = declarationData.autor.avatar;
-  pinElement.alt = "заголовок объявления";
+  pinElement.style = 'left: ' + declarationData[i].location.x + 'px; top: ' + declarationData[i].location.y + 'px;';
+  pinElement.img.src = declarationData[i].autor.avatar;
+  pinElement.alt = 'заголовок объявления';
 
   pinsList.appendChild(pinElement);
-};
-
-
+}
