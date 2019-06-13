@@ -9,7 +9,7 @@ var getData = function (count) {
 
   var types = ['palace', 'flat', 'house', 'bungalo'];
 
-  for (var i = 0; i <= count - 1; ++i) {
+  for (var i = 0; i < count; ++i) {
     var pinData = {
       author: {
         avatar: 'img/avatars/user0' + i + '.png'
@@ -28,8 +28,10 @@ var getData = function (count) {
 };
 
 var pinsData = getData(8);
+console.log(pinsData);
 
 var pinsList = document.querySelector('.map__pins');
+
 
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
