@@ -9,7 +9,7 @@ var getData = function (count) {
 
   var types = ['palace', 'flat', 'house', 'bungalo'];
 
-  for (var i = 1; i <= count - 1; i++) {
+  for (var i = 0; i <= count - 1; ++i) {
     var pinData = {
       author: {
         avatar: 'img/avatars/user0' + i + '.png'
@@ -22,7 +22,7 @@ var getData = function (count) {
         y: random(130, 630)
       },
     };
-    newArray[i - 1] = pinData;
+    newArray[i] = pinData;
   }
   return newArray;
 };
@@ -33,10 +33,10 @@ var pinsList = document.querySelector('.map__pins');
 
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
-var createPin = function () {
+var createPin = function (item) {
   var pinElement = pinTemplate.cloneNode(true);
-  pinElement.style = 'left: ' + pinsData[i].location.x + 'px; top: ' + pinsData[i].location.y + 'px;';
-  pinElement.firstChild.src = pinsData[i].author.avatar;
+  pinElement.style = 'left: ' + item.location.x + 'px; top: ' + item.location.y + 'px;';
+  pinElement.firstChild.src = item.author.avatar;
   pinElement.alt = 'заголовок объявления';
 };
 
