@@ -1,18 +1,17 @@
 'use strict';
 
+var random = function (min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+};
+
 var getData = function (count) {
   var newArray = [];
 
   var types = ['palace', 'flat', 'house', 'bungalo'];
 
-  var random = function (min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
-  };
-
-  for (var i = 0; i <= count - 1; i++) {
-
-    var item = {
-      autor: {
+  for (var i = 1; i <= count - 1; i++) {
+    var pinData = {
+      author: {
         avatar: 'img/avatars/user0' + i + '.png'
       },
       offer: {
@@ -23,26 +22,24 @@ var getData = function (count) {
         y: random(130, 630)
       },
     };
-
-    newArray[i] = item;
-
-  } return newArray;
+    newArray[i - 1] = pinData;
+  }
+  return newArray;
 };
 
-var declarationData = getData(8);
+var pinsData = getData(8);
 
 var pinsList = document.querySelector('.map__pins');
-console.log(pinsList);
 
-var pinTemplate = document.querySelector('#pin').content;
-var newPinTemplate = pinTemplate.querySelector('.map__pin');
+var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
-
-for (var i = 0; i < declarationData.length; i++) {
-  var pinElement = newPinTemplate.cloneNode(true);
-  pinElement.style = 'left: ' + declarationData[i].location.x + 'px; top: ' + declarationData[i].location.y + 'px;';
-  pinElement.img.src = declarationData[i].autor.avatar;
+var createPin = function () {
+  var pinElement = pinTemplate.cloneNode(true);
+  pinElement.style = 'left: ' + pinsData[i].location.x + 'px; top: ' + pinsData[i].location.y + 'px;';
+  pinElement.firstChild.src = pinsData[i].author.avatar;
   pinElement.alt = 'заголовок объявления';
+};
 
-  pinsList.appendChild(pinElement);
+for (var i = 0; i < pinsData.length; i++) {
+  pinsList.appendChild(createPin(pinsData[i]));
 }
