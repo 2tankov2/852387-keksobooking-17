@@ -1,5 +1,9 @@
 'use strict';
 
+var pinWidth = 50;
+var pinHeight = 70;
+var widthMap = document.querySelector('.map').offsetWidth;
+
 var random = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
@@ -9,7 +13,7 @@ var getData = function (count) {
 
   var types = ['palace', 'flat', 'house', 'bungalo'];
 
-  for (var i = 1; i <= count - 1; i++) {
+  for (var i = 1; i <= count; i++) {
     var pinData = {
       author: {
         avatar: 'img/avatars/user0' + i + '.png'
@@ -18,7 +22,7 @@ var getData = function (count) {
         type: types[random(0, types.length)]
       },
       location: {
-        x: random(300, 900),
+        x: random(pinWidth / 2, widthMap - pinWidth / 2),
         y: random(130, 630)
       },
     };
@@ -31,15 +35,18 @@ var pinsData = getData(8);
 
 var pinsList = document.querySelector('.map__pins');
 
+
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
-var createPin = function () {
+var createPin = function (pin) {
   var pinElement = pinTemplate.cloneNode(true);
-  pinElement.style = 'left: ' + pinsData[i].location.x + 'px; top: ' + pinsData[i].location.y + 'px;';
-  pinElement.firstChild.src = pinsData[i].author.avatar;
+  pinElement.style = 'left: ' + (pin.location.x - pinWidth / 2) + 'px; top: ' + (pin.location.y - pinHeight) + 'px;';
+  pinElement.firstChild.src = pin.author.avatar;
   pinElement.alt = 'заголовок объявления';
+  return pinElement;
 };
 
 for (var i = 0; i < pinsData.length; i++) {
   pinsList.appendChild(createPin(pinsData[i]));
 }
+
