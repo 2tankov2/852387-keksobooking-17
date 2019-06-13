@@ -1,8 +1,8 @@
 'use strict';
 
-var PIN_WIDTH = 50;
-var PIN_HEIGHT = 70;
-var WIDTH_MAP = document.querySelector('.map').offsetWidth;
+var pinWidth = 50;
+var pinHeight = 70;
+var widthMap = document.querySelector('.map').offsetWidth;
 
 var random = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -22,7 +22,7 @@ var getData = function (count) {
         type: types[random(0, types.length)]
       },
       location: {
-        x: random(PIN_WIDTH / 2, WIDTH_MAP - PIN_WIDTH / 2),
+        x: random(pinWidth / 2, widthMap - pinWidth / 2),
         y: random(130, 630)
       },
     };
@@ -40,7 +40,7 @@ var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pi
 
 var createPin = function (pin) {
   var pinElement = pinTemplate.cloneNode(true);
-  pinElement.style = 'left: ' + (pin.location.x - PIN_WIDTH / 2) + 'px; top: ' + (pin.location.y - PIN_HEIGHT) + 'px;';
+  pinElement.style = 'left: ' + (pin.location.x - pinWidth / 2) + 'px; top: ' + (pin.location.y - pinHeight) + 'px;';
   pinElement.firstChild.src = pin.author.avatar;
   pinElement.alt = 'заголовок объявления';
   return pinElement;
