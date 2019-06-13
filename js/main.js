@@ -22,7 +22,7 @@ var getData = function (count) {
         type: types[random(0, types.length)]
       },
       location: {
-        x: random(0 + PIN_WIDTH / 2, WIDTH_MAP - PIN_WIDTH / 2),
+        x: random(PIN_WIDTH / 2, WIDTH_MAP - PIN_WIDTH / 2),
         y: random(130, 630)
       },
     };
