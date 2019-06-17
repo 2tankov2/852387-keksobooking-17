@@ -60,23 +60,21 @@ var filters = document.querySelector('.map__filters');
 var inputAddress = document.querySelector('#address');
 
 var pinMainLocation = {
-  location: {
-    x: pinMain.getBoundingClientRect().left + PINMAIN_WIDTH / 2,
-    y: pinMain.getBoundingClientRect().top + PINMAIN_HEIGHT
-  }
+  x: pinMain.getBoundingClientRect().left + PINMAIN_WIDTH / 2,
+  y: pinMain.getBoundingClientRect().top + PINMAIN_HEIGHT
 };
 
-var activePage = function () {
+var setActivePage = function () {
   map.classList.remove('map--faded');
   form.classList.remove('ad-form--disabled');
   filters.classList.remove('ad-form--disabled');
 };
 
-var pinMapAdress = function (pin) {
-  inputAddress.value = pin.location.x + ', ' + pin.location.y;
+var setPinCoordinates = function (pin) {
+  inputAddress.value = pin.x + ', ' + pin.y;
 };
 
 pinMain.addEventListener('click', function () {
-  activePage();
-  pinMapAdress(pinMainLocation);
+  setActivePage();
+  setPinCoordinates(pinMainLocation);
 });
