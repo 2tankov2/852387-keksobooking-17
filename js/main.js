@@ -133,8 +133,8 @@ pinMain.addEventListener('click', function () {
 var titleInput = form.querySelector('#title');
 var priceInput = form.querySelector('#price');
 var typeHouseInput = form.querySelector('#type');
-var timeinInput = form.querySelector('#timein');
-var timeoutInput = form.querySelector('#timeout');
+var timeInInput = form.querySelector('#timein');
+var timeOutInput = form.querySelector('#timeout');
 
 
 // валидация поля "заголовка объявления"
@@ -173,18 +173,24 @@ priceInput.addEventListener('invalid', function () {
 
 // валидация поля "тип жилья"
 typeHouseInput.addEventListener('change', function () {
-  if (typeHouseInput.value === 'bungalo') {
-    priceInput.min = 0;
-    priceInput.placeholder = 0;
-  } if (typeHouseInput.value === 'flat') {
-    priceInput.min = 1000;
-    priceInput.placeholder = 1000;
-  } if (typeHouseInput.value === 'house') {
-    priceInput.min = 5000;
-    priceInput.placeholder = 5000;
-  } if (typeHouseInput.value === 'palace') {
-    priceInput.min = 10000;
-    priceInput.placeholder = 10000;
+
+  switch (typeHouseInput.value) {
+    case 'bungalo':
+      priceInput.min = 0;
+      priceInput.placeholder = 0;
+      break;
+    case 'flat':
+      priceInput.min = 1000;
+      priceInput.placeholder = 1000;
+      break;
+    case 'house':
+      priceInput.min = 5000;
+      priceInput.placeholder = 5000;
+      break;
+    case 'palace':
+      priceInput.min = 10000;
+      priceInput.placeholder = 10000;
+      break;
   }
 });
 
@@ -192,26 +198,104 @@ typeHouseInput.addEventListener('change', function () {
 inputAddress.setAttribute('readonly', 'readonly');
 
 // валидация поля "время заезда"
-timeinInput.addEventListener('change', function () {
-  if (timeinInput.value === '12:00') {
-    timeoutInput.value = '12:00';
-  }
-  if (timeinInput.value === '13:00') {
-    timeoutInput.value = '13:00';
-  }
-  if (timeinInput.value === '14:00') {
-    timeoutInput.value = '14:00';
+timeInInput.addEventListener('change', function () {
+  switch (timeInInput.value) {
+    case '12:00':
+      timeOutInput.value = '12:00';
+      break;
+    case '13:00':
+      timeOutInput.value = '13:00';
+      break;
+    case '14:00':
+      timeOutInput.value = '14:00';
+      break;
   }
 });
 
-timeoutInput.addEventListener('change', function () {
-  if (timeoutInput.value === '12:00') {
-    timeinInput.value = '12:00';
+timeOutInput.addEventListener('change', function () {
+  switch (timeOutInput.value) {
+    case '12:00':
+      timeInInput.value = '12:00';
+      break;
+    case '13:00':
+      timeInInput.value = '13:00';
+      break;
+    case '14:00':
+      timeInInput.value = '14:00';
   }
-  if (timeoutInput.value === '13:00') {
-    timeinInput.value = '13:00';
+});
+
+
+// ПЕРЕТАСКИВАНИЕ ГЛАВНОЙ МЕТКИ (предварительные наброски функций - черновик)
+
+// var pinMain = document.querySelector('.map__pin--main'); - определена выше
+// обработаем событие начала перетаскивания нашей главной метки mousedown
+
+// максимально допустимые размеры карты
+var locationMap = {
+  min: {
+    x: PINMAIN_WIDTH,
+    y: 130
+  },
+  max: {
+    x: widthMap + PINMAIN_WIDTH / 2,
+    y: 630
   }
-  if (timeoutInput.value === '14:00') {
-    timeinInput.value = '14:00';
-  }
+};
+
+/* location: {
+  x: random(PIN_WIDTH / 2, widthMap - PIN_WIDTH / 2),
+  y: random(130, 630)
+} */
+
+pinMain.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  // запомним начальные координаты
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+  // При каждом движении мыши нам нужно обновлять смещение относительно первоначальной
+  // точки, чтобы метка смещалась на необходимую величину.
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    if (moveEvt.clientX < locationMap.min.x) {
+      moveEvt.clientX = locationMap.min.x;
+    } if (moveEvt.clientX > locationMap.max.x) {
+      moveEvt.clientX = locationMap.max.x;
+    }
+
+    if (moveEvt.clientY < locationMap.min.y) {
+      moveEvt.clientY = locationMap.min.y;
+    } if (moveEvt.clientY > locationMap.max.y) {
+      moveEvt.clientY = locationMap.max.y;
+    }
+
+    var shift = { // разница смещения
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = { // записываем новые координаты
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    pinMainLocation = startCoords;
+
+    pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
+    pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
+  };
+  // При отпускании кнопки мыши нужно переставать слушать события движения мыши.
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  // обработчики события передвижения мыши и отпускания кнопки мыши
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
 });
