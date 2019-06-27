@@ -172,57 +172,55 @@ priceInput.addEventListener('invalid', function () {
 });
 
 // валидация поля "тип жилья"
-typeHouseInput.addEventListener('change', function () {
-
-  switch (typeHouseInput.value) {
+var getTypeHouse = function (x, y) {
+  switch (x.value) {
     case 'bungalo':
-      priceInput.min = 0;
-      priceInput.placeholder = 0;
+      y.min = 0;
+      y.placeholder = 0;
       break;
     case 'flat':
-      priceInput.min = 1000;
-      priceInput.placeholder = 1000;
+      y.min = 1000;
+      y.placeholder = 1000;
       break;
     case 'house':
-      priceInput.min = 5000;
-      priceInput.placeholder = 5000;
+      y.min = 5000;
+      y.placeholder = 5000;
       break;
     case 'palace':
-      priceInput.min = 10000;
-      priceInput.placeholder = 10000;
+      y.min = 10000;
+      y.placeholder = 10000;
       break;
   }
+};
+
+typeHouseInput.addEventListener('change', function () {
+  getTypeHouse(typeHouseInput, priceInput);
 });
 
 // валидация поля "адрес"
 inputAddress.setAttribute('readonly', 'readonly');
 
 // валидация поля "время заезда"
-timeInInput.addEventListener('change', function () {
-  switch (timeInInput.value) {
+var getTime = function (x, y) {
+  switch (x.value) {
     case '12:00':
-      timeOutInput.value = '12:00';
+      y.value = '12:00';
       break;
     case '13:00':
-      timeOutInput.value = '13:00';
+      y.value = '13:00';
       break;
     case '14:00':
-      timeOutInput.value = '14:00';
+      y.value = '14:00';
       break;
   }
+};
+
+timeInInput.addEventListener('change', function () {
+  getTime(timeInInput, timeOutInput);
 });
 
 timeOutInput.addEventListener('change', function () {
-  switch (timeOutInput.value) {
-    case '12:00':
-      timeInInput.value = '12:00';
-      break;
-    case '13:00':
-      timeInInput.value = '13:00';
-      break;
-    case '14:00':
-      timeInInput.value = '14:00';
-  }
+  getTime(timeOutInput, timeInInput);
 });
 
 
