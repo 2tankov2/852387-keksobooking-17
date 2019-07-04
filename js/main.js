@@ -136,6 +136,9 @@ var typeHouseInput = form.querySelector('#type');
 var timeInInput = form.querySelector('#timein');
 var timeOutInput = form.querySelector('#timeout');
 
+var cleanTitleInput = function () {
+  return titleInput.setCustomValidity('');
+};
 
 // валидация поля "заголовка объявления"
 titleInput.setAttribute('required', 'required');
@@ -149,9 +152,7 @@ titleInput.addEventListener('invalid', function () {
     titleInput.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
   } else if (titleInput.validity.valueMissing) {
     titleInput.setCustomValidity('Обязательное поле');
-  } else {
-    titleInput.setCustomValidity('');
-  }
+  } cleanTitleInput();
 });
 
 // валидация поля "цена за ночь"
@@ -166,134 +167,158 @@ priceInput.addEventListener('invalid', function () {
     priceInput.setCustomValidity('Установленная цена превышает максимальное значения');
   } else if (priceInput.validity.valueMissing) {
     priceInput.setCustomValidity('Обязательное поле');
-  } else {
-    priceInput.setCustomValidity('');
-  }
+  } cleanTitleInput();
 });
 
 // валидация поля "тип жилья"
-var getTypeHouse = function (x, y) {
-  switch (x.value) {
+var getTypeHouse = function (type) {
+  var result;
+  switch (type) {
     case 'bungalo':
-      y.min = 0;
-      y.placeholder = 0;
+      result = 0;
       break;
     case 'flat':
-      y.min = 1000;
-      y.placeholder = 1000;
+      result = 1000;
       break;
     case 'house':
-      y.min = 5000;
-      y.placeholder = 5000;
+      result = 5000;
       break;
     case 'palace':
-      y.min = 10000;
-      y.placeholder = 10000;
-      break;
-  }
+      result = 10000;
+  } return result;
 };
 
 typeHouseInput.addEventListener('change', function () {
-  getTypeHouse(typeHouseInput, priceInput);
+  var value = getTypeHouse(typeHouseInput.value);
+
+  priceInput.min = value;
+  priceInput.placeholder = value;
 });
 
 // валидация поля "адрес"
 inputAddress.setAttribute('readonly', 'readonly');
 
 // валидация поля "время заезда"
-var getTime = function (x, y) {
-  switch (x.value) {
+
+// getTime => timeOutInput.value = getTime(timeInInput.value)
+var getTime = function (time) {
+  var result;
+  switch (time) {
     case '12:00':
-      y.value = '12:00';
+      result = '12:00';
       break;
     case '13:00':
-      y.value = '13:00';
+      result = '13:00';
       break;
     case '14:00':
-      y.value = '14:00';
+      result = '14:00';
       break;
-  }
+  } return result;
 };
 
 timeInInput.addEventListener('change', function () {
-  getTime(timeInInput, timeOutInput);
+  var time = getTime(timeInInput.value);
+
+  timeOutInput.value = time;
 });
 
 timeOutInput.addEventListener('change', function () {
-  getTime(timeOutInput, timeInInput);
+  var time = getTime(timeOutInput.value);
+
+  timeInInput.value = time;
 });
 
 
-// ПЕРЕТАСКИВАНИЕ ГЛАВНОЙ МЕТКИ (предварительные наброски функций - черновик)
+// ПЕРЕТАСКИВАНИЕ ГЛАВНОЙ МЕТКИ
 
 // var pinMain = document.querySelector('.map__pin--main'); - определена выше
-// обработаем событие начала перетаскивания нашей главной метки mousedown
-
 // максимально допустимые размеры карты
 var locationMap = {
   min: {
-    x: PINMAIN_WIDTH,
+    x: 0,
     y: 130
   },
   max: {
-    x: widthMap + PINMAIN_WIDTH / 2,
+    x: widthMap - PINMAIN_WIDTH,
     y: 630
   }
 };
 
-/* location: {
-  x: random(PIN_WIDTH / 2, widthMap - PIN_WIDTH / 2),
-  y: random(130, 630)
-} */
+// обработаем событие начала перетаскивания нашей главной метки mousedown
+(function () {
 
-pinMain.addEventListener('mousedown', function (evt) {
-  evt.preventDefault();
-  // запомним начальные координаты
-  var startCoords = {
-    x: evt.clientX,
-    y: evt.clientY
-  };
-  // При каждом движении мыши нам нужно обновлять смещение относительно первоначальной
-  // точки, чтобы метка смещалась на необходимую величину.
-  var onMouseMove = function (moveEvt) {
-    moveEvt.preventDefault();
-
-    if (moveEvt.clientX < locationMap.min.x) {
-      moveEvt.clientX = locationMap.min.x;
-    } if (moveEvt.clientX > locationMap.max.x) {
-      moveEvt.clientX = locationMap.max.x;
-    }
-
-    if (moveEvt.clientY < locationMap.min.y) {
-      moveEvt.clientY = locationMap.min.y;
-    } if (moveEvt.clientY > locationMap.max.y) {
-      moveEvt.clientY = locationMap.max.y;
-    }
-
-    var shift = { // разница смещения
-      x: startCoords.x - moveEvt.clientX,
-      y: startCoords.y - moveEvt.clientY
+  pinMain.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+    // запомним начальные координаты
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
     };
 
-    startCoords = { // записываем новые координаты
-      x: moveEvt.clientX,
-      y: moveEvt.clientY
+    // нажатие на главную метку — это активация страницы без перемещения
+    // мутки, а если мы нажали и начали двигать курсор, то действие
+    // активации страницы надо отменить
+    var dragged = false;
+
+    // При каждом движении мыши нам нужно обновлять смещение относительно первоначальной
+    // точки, чтобы метка смещалась на необходимую величину.
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+      dragged = true;
+
+      var shift = { // разница смещения
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = { // записываем новые координаты
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      pinMainLocation = startCoords;
+
+      // добавляем условия, чтобы маркер невозможно было переместить за пределы карты
+      if ((pinMain.offsetLeft - shift.x) < locationMap.min.x) {
+        pinMain.style.left = locationMap.min.x + 'px';
+      }
+      if ((pinMain.offsetLeft - shift.x) > locationMap.max.x) {
+        pinMain.style.left = locationMap.max.x + 'px';
+      }
+      pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
+
+      if ((pinMain.offsetTop - shift.y) < locationMap.min.y) {
+        pinMain.style.top = locationMap.min.y + 'px';
+      }
+      if ((pinMain.offsetTop - shift.y) > locationMap.max.y) {
+        pinMain.style.top = locationMap.max.y + 'px';
+      }
+      pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
     };
 
-    pinMainLocation = startCoords;
+    // При отпускании кнопки мыши нужно переставать слушать события движения мыши.
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
 
-    pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
-    pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
-  };
-  // При отпускании кнопки мыши нужно переставать слушать события движения мыши.
-  var onMouseUp = function (upEvt) {
-    upEvt.preventDefault();
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
 
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
-  };
+      // при отпускании мыши мы повесим обработчик на click,
+      // который отменит действие по умолчанию, если перемещение
+      // имело место
+      if (dragged) {
+        var onClickPreventDefault = function (evt) {
+          evt.preventDefault();
+          pinMain.removeEventListener('click',
+              onClickPreventDefault);
+        };
+        pinMain.addEventListener('click', onClickPreventDefault);
+      }
+    };
 
-  // обработчики события передвижения мыши и отпускания кнопки мыши
-  document.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseup', onMouseUp);
-});
+    // обработчики события передвижения мыши и отпускания кнопки мыши
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+
+})();
