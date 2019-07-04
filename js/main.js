@@ -307,7 +307,7 @@ var locationMap = {
       // который отменит действие по умолчанию, если перемещение
       // имело место
       if (dragged) {
-        var onClickPreventDefault = function (evt) {
+        var onClickPreventDefault = function () {
           evt.preventDefault();
           pinMain.removeEventListener('click',
               onClickPreventDefault);
