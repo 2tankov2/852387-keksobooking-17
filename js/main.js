@@ -172,20 +172,18 @@ priceInput.addEventListener('invalid', function () {
 
 // валидация поля "тип жилья"
 var getTypeHouse = function (type) {
-  var result;
   switch (type) {
     case 'bungalo':
-      result = 0;
-      break;
+      return 0;
     case 'flat':
-      result = 1000;
-      break;
+      return 1000;
     case 'house':
-      result = 5000;
-      break;
+      return 5000;
     case 'palace':
-      result = 10000;
-  } return result;
+      return 10000;
+    default:
+      return '';
+  }
 };
 
 typeHouseInput.addEventListener('change', function () {
@@ -199,21 +197,17 @@ typeHouseInput.addEventListener('change', function () {
 inputAddress.setAttribute('readonly', 'readonly');
 
 // валидация поля "время заезда"
-
-// getTime => timeOutInput.value = getTime(timeInInput.value)
 var getTime = function (time) {
-  var result;
   switch (time) {
     case '12:00':
-      result = '12:00';
-      break;
+      return '12:00';
     case '13:00':
-      result = '13:00';
-      break;
+      return '13:00';
     case '14:00':
-      result = '14:00';
-      break;
-  } return result;
+      return '14:00';
+    default:
+      return '';
+  }
 };
 
 timeInInput.addEventListener('change', function () {
@@ -231,7 +225,7 @@ timeOutInput.addEventListener('change', function () {
 
 // ПЕРЕТАСКИВАНИЕ ГЛАВНОЙ МЕТКИ
 
-// var pinMain = document.querySelector('.map__pin--main'); - определена выше
+// var pinMain = document.querySelector('.map__pin--main'); - главная марка определена выше
 // максимально допустимые размеры карты
 var locationMap = {
   min: {
@@ -244,9 +238,18 @@ var locationMap = {
   }
 };
 
-// обработаем событие начала перетаскивания нашей главной метки mousedown
-(function () {
+// функции определения позиции метки в пределах карты
+var getPosition = function (coordinate, shift, minValue, maxVaue) {
+  if ((coordinate - shift) < minValue) {
+    return minValue + 'px';
+  } else if ((coordinate - shift) > maxVaue) {
+    return maxVaue + 'px';
+  }
+  return (coordinate - shift) + 'px';
+};
 
+(function () {
+// обработаем событие начала перетаскивания нашей главной метки mousedown
   pinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
     // запомним начальные координаты
@@ -278,22 +281,8 @@ var locationMap = {
 
       pinMainLocation = startCoords;
 
-      // добавляем условия, чтобы маркер невозможно было переместить за пределы карты
-      if ((pinMain.offsetLeft - shift.x) < locationMap.min.x) {
-        pinMain.style.left = locationMap.min.x + 'px';
-      }
-      if ((pinMain.offsetLeft - shift.x) > locationMap.max.x) {
-        pinMain.style.left = locationMap.max.x + 'px';
-      }
-      pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
-
-      if ((pinMain.offsetTop - shift.y) < locationMap.min.y) {
-        pinMain.style.top = locationMap.min.y + 'px';
-      }
-      if ((pinMain.offsetTop - shift.y) > locationMap.max.y) {
-        pinMain.style.top = locationMap.max.y + 'px';
-      }
-      pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
+      pinMain.style.left = getPosition(pinMain.offsetLeft, shift.x, locationMap.min.x, locationMap.max.x);
+      pinMain.style.top = getPosition(pinMain.offsetTop, shift.y, locationMap.min.y, locationMap.max.y);
     };
 
     // При отпускании кнопки мыши нужно переставать слушать события движения мыши.
@@ -309,8 +298,7 @@ var locationMap = {
       if (dragged) {
         var onClickPreventDefault = function () {
           evt.preventDefault();
-          pinMain.removeEventListener('click',
-              onClickPreventDefault);
+          pinMain.removeEventListener('click', onClickPreventDefault);
         };
         pinMain.addEventListener('click', onClickPreventDefault);
       }
