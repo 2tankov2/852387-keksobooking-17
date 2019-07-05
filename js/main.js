@@ -34,6 +34,7 @@ var getData = function (count) {
     };
     newArray[i - 1] = pinData;
   }
+
   return newArray;
 };
 
@@ -49,11 +50,13 @@ var createPin = function (pin) {
   pinElement.style = 'left: ' + (pin.location.x - PIN_WIDTH / 2) + 'px; top: ' + (pin.location.y - PIN_HEIGHT) + 'px;';
   pinElement.firstChild.src = pin.author.avatar;
   pinElement.alt = 'заголовок объявления';
+
   return pinElement;
 };
 
 // отрисовка сгенерированных DOM-элементов в блок .map__pins
 var addPinsData = function () {
+
   for (var i = 0; i < pinsData.length; i++) {
     pinsList.appendChild(createPin(pinsData[i]));
   }
@@ -76,6 +79,7 @@ var inputAddress = document.querySelector('#address');
 
 // функция добавления аттрибута
 var addAttribute = function (elements, atr, value) {
+
   for (var i = 0; i < elements.length; i++) {
     elements[i].setAttribute(atr, value);
   }
@@ -83,6 +87,7 @@ var addAttribute = function (elements, atr, value) {
 
 // функция удаления аттрибута
 var deleteAttribute = function (elements, atr, value) {
+
   for (var i = 0; i < elements.length; i++) {
     elements[i].removeAttribute(atr, value);
   }
@@ -249,6 +254,7 @@ var getPosition = function (coordinate, shift, minValue, maxVaue) {
   } else if ((coordinate - shift) > maxVaue) {
     return maxVaue + 'px';
   }
+
   return (coordinate - shift) + 'px';
 };
 
@@ -302,8 +308,10 @@ var getPosition = function (coordinate, shift, minValue, maxVaue) {
       if (dragged) {
         var onClickPreventDefault = function () {
           evt.preventDefault();
+
           pinMain.removeEventListener('click', onClickPreventDefault);
         };
+
         pinMain.addEventListener('click', onClickPreventDefault);
       }
     };
