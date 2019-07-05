@@ -136,39 +136,43 @@ var typeHouseInput = form.querySelector('#type');
 var timeInInput = form.querySelector('#timein');
 var timeOutInput = form.querySelector('#timeout');
 
-var cleanTitleInput = function () {
-  return titleInput.setCustomValidity('');
-};
-
 // валидация поля "заголовка объявления"
 titleInput.setAttribute('required', 'required');
 titleInput.setAttribute('minlength', '30');
 titleInput.setAttribute('maxlength', '100');
 
-titleInput.addEventListener('invalid', function () {
+var createValidTitle = function () {
   if (titleInput.validity.tooShort) {
-    titleInput.setCustomValidity('Заголовок объявления должен состоять минимум из 30-ти символов');
+    return titleInput.setCustomValidity('Заголовок объявления должен состоять минимум из 30-ти символов');
   } else if (titleInput.validity.tooLong) {
-    titleInput.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
+    return titleInput.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
   } else if (titleInput.validity.valueMissing) {
-    titleInput.setCustomValidity('Обязательное поле');
-  } cleanTitleInput();
-});
+    return titleInput.setCustomValidity('Обязательное поле');
+  }
+
+  return titleInput.setCustomValidity('');
+};
+
+titleInput.addEventListener('invalid', createValidTitle);
 
 // валидация поля "цена за ночь"
 priceInput.setAttribute('required', 'required');
 priceInput.setAttribute('max', '1000000');
 priceInput.setAttribute('min', '0');
 
-priceInput.addEventListener('invalid', function () {
+var createValidPrice = function () {
   if (priceInput.validity.rangeUnderflow) { // min
-    priceInput.setCustomValidity('Установленная цена меньше минимального значения');
+    return priceInput.setCustomValidity('Установленная цена меньше минимального значения');
   } else if (priceInput.validity.rangeOverflow) { // max
-    priceInput.setCustomValidity('Установленная цена превышает максимальное значения');
+    return priceInput.setCustomValidity('Установленная цена превышает максимальное значения');
   } else if (priceInput.validity.valueMissing) {
-    priceInput.setCustomValidity('Обязательное поле');
-  } cleanTitleInput();
-});
+    return priceInput.setCustomValidity('Обязательное поле');
+  }
+
+  return titleInput.setCustomValidity('');
+};
+
+priceInput.addEventListener('invalid', createValidPrice);
 
 // валидация поля "тип жилья"
 var getTypeHouse = function (type) {
