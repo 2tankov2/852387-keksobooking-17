@@ -19,7 +19,7 @@
           type: types[window.util.random(0, types.length)]
         },
         location: {
-          x: window.util.random(window.pin.PIN_WIDTH / 2, window.map.widthMap - window.pin.PIN_WIDTH / 2),
+          x: window.util.random(window.pin.PIN_WIDTH / 2, window.widthMap - window.pin.PIN_WIDTH / 2),
           y: window.util.random(130, 630)
         },
       };
