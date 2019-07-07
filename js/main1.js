@@ -1,17 +1,19 @@
 'use strict';
 
 // ОТРИСОВКА МЕТОК ПОХОЖИХ ОБЪЯВЛЕНИЙ
-// размеры меток
+/* (global-data.js)// размеры меток
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 
 // ширина карты
 var widthMap = document.querySelector('.map').offsetWidth;
+*/
 
-var random = function (min, max) {
+/* (util.js) var random = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
-};
+};*/
 
+/* (data.js)
 // создайём массив, состоящий из 8 сгенерированных JS объектов,
 // которые будут описывать похожие объявления неподалёку
 var getData = function (count) {
@@ -25,11 +27,11 @@ var getData = function (count) {
         avatar: 'img/avatars/user0' + i + '.png'
       },
       offer: {
-        type: types[random(0, types.length)]
+        type: types[window.util.random(0, types.length)]
       },
       location: {
-        x: random(PIN_WIDTH / 2, widthMap - PIN_WIDTH / 2),
-        y: random(130, 630)
+        x: window.util.random(window.global.PIN_WIDTH / 2, window.global.widthMap - window.global.PIN_WIDTH / 2),
+        y: window.util.random(130, 630)
       },
     };
     newArray[i - 1] = pinData;
@@ -39,7 +41,7 @@ var getData = function (count) {
 };
 
 var pinsData = getData(8);
-
+*/
 // создаём DOM-элементы, соответствующие меткам на карте,
 // и заполняем их данными из массива
 var pinsList = document.querySelector('.map__pins');
@@ -47,7 +49,7 @@ var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pi
 
 var createPin = function (pin) {
   var pinElement = pinTemplate.cloneNode(true);
-  pinElement.style = 'left: ' + (pin.location.x - PIN_WIDTH / 2) + 'px; top: ' + (pin.location.y - PIN_HEIGHT) + 'px;';
+  pinElement.style = 'left: ' + (pin.location.x - window.global.PIN_WIDTH / 2) + 'px; top: ' + (pin.location.y - window.global.PIN_HEIGHT) + 'px;';
   pinElement.firstChild.src = pin.author.avatar;
   pinElement.alt = 'заголовок объявления';
 
@@ -57,8 +59,8 @@ var createPin = function (pin) {
 // отрисовка сгенерированных DOM-элементов в блок .map__pins
 var addPinsData = function () {
 
-  for (var i = 0; i < pinsData.length; i++) {
-    pinsList.appendChild(createPin(pinsData[i]));
+  for (var i = 0; i < window.data.pinsData.length; i++) {
+    pinsList.appendChild(createPin(window.data.pinsData[i]));
   }
 };
 
@@ -78,7 +80,7 @@ var selectFilters = filters.querySelectorAll('select');
 var inputAddress = document.querySelector('#address');
 
 // функция добавления аттрибута
-var addAttribute = function (elements, atr, value) {
+/* (util.js)var addAttribute = function (elements, atr, value) {
 
   for (var i = 0; i < elements.length; i++) {
     elements[i].setAttribute(atr, value);
@@ -91,14 +93,14 @@ var deleteAttribute = function (elements, atr, value) {
   for (var i = 0; i < elements.length; i++) {
     elements[i].removeAttribute(atr, value);
   }
-};
+};*/
 
 // добавляем атрибут disabled к полям формы
-addAttribute(fieldsetForm, 'disabled', 'disabled');
+window.util.addAttribute(fieldsetForm, 'disabled', 'disabled');
 
 // добавляем атрибут disabled к полям фильтра
-addAttribute(fieldsetFilters, 'disabled', 'disabled');
-addAttribute(selectFilters, 'disabled', 'disabled');
+window.util.addAttribute(fieldsetFilters, 'disabled', 'disabled');
+window.util.addAttribute(selectFilters, 'disabled', 'disabled');
 
 // сохраняем координаты главной метки в объект
 var pinMainLocation = {
@@ -117,9 +119,9 @@ var setActivePage = function () {
   addPinsData();
   form.classList.remove('ad-form--disabled');
   filters.classList.remove('ad-form--disabled');
-  deleteAttribute(fieldsetForm, 'disabled', 'null');
-  deleteAttribute(fieldsetFilters, 'disabled', 'null');
-  deleteAttribute(selectFilters, 'disabled', 'null');
+  window.util.deleteAttribute(fieldsetForm, 'disabled', 'null');
+  window.util.deleteAttribute(fieldsetFilters, 'disabled', 'null');
+  window.util.deleteAttribute(selectFilters, 'disabled', 'null');
 };
 
 // записываем координаты главной метки в поле адреса формы
@@ -242,7 +244,7 @@ var locationMap = {
     y: 130
   },
   max: {
-    x: widthMap - PINMAIN_WIDTH,
+    x: window.global.widthMap - PINMAIN_WIDTH,
     y: 630
   }
 };
