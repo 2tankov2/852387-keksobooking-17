@@ -1,16 +1,14 @@
 'use strict';
 
-// сохраняем координаты главной метки в объект
-window.pinMainLocation = {
-  x: window.global.pinMain.getBoundingClientRect().left + window.global.PINMAIN_WIDTH / 2,
-  y: window.global.pinMain.getBoundingClientRect().top + window.global.PINMAIN_HEIGHT
-};
-
 (function () {
-// ПЕРЕТАСКИВАНИЕ ГЛАВНОЙ МЕТКИ
+  // сохраняем координаты главной метки в объект
+  window.pinMainLocation = {
+    x: window.global.pinMain.getBoundingClientRect().left + window.global.PINMAIN_WIDTH / 2,
+    y: window.global.pinMain.getBoundingClientRect().top + window.global.PINMAIN_HEIGHT
+  };
 
-// var pinMain = document.querySelector('.map__pin--main'); - главная марка определена выше
-// максимально допустимые размеры карты
+  // ПЕРЕТАСКИВАНИЕ ГЛАВНОЙ МЕТКИ
+  // максимально допустимые размеры карты
   var locationMap = {
     min: {
       x: 0,
@@ -26,13 +24,14 @@ window.pinMainLocation = {
   var getPosition = function (coordinate, shift, minValue, maxVaue) {
     if ((coordinate - shift) < minValue) {
       return minValue + 'px';
-    } else if ((coordinate - shift) > maxVaue) {
+    }
+
+    if ((coordinate - shift) > maxVaue) {
       return maxVaue + 'px';
     }
 
     return (coordinate - shift) + 'px';
   };
-
 
   // обработаем событие начала перетаскивания нашей главной метки mousedown
   window.global.pinMain.addEventListener('mousedown', function (evt) {
@@ -44,7 +43,7 @@ window.pinMainLocation = {
     };
 
     // нажатие на главную метку — это активация страницы без перемещения
-    // мутки, а если мы нажали и начали двигать курсор, то действие
+    // метки, а если мы нажали и начали двигать курсор, то действие
     // активации страницы надо отменить
     var dragged = false;
 
@@ -78,8 +77,7 @@ window.pinMainLocation = {
       document.removeEventListener('mouseup', onMouseUp);
 
       // при отпускании мыши мы повесим обработчик на click,
-      // который отменит действие по умолчанию, если перемещение
-      // имело место
+      // который отменит действие по умолчанию, если перемещение имело место
       if (dragged) {
         var onClickPreventDefault = function () {
           evt.preventDefault();

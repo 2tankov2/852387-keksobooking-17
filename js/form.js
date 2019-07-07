@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
 // ВАЛИДАЦИЯ ФОРМЫ
 // находим и сохраняем объекты, которые понадобятся (с которыми будем работать)
   var titleInput = window.global.form.querySelector('#title');
@@ -10,7 +9,7 @@
   var timeInInput = window.global.form.querySelector('#timein');
   var timeOutInput = window.global.form.querySelector('#timeout');
 
-  // валидация поля "заголовка объявления"
+  // заголовок
   titleInput.setAttribute('required', 'required');
   titleInput.setAttribute('minlength', '30');
   titleInput.setAttribute('maxlength', '100');
@@ -18,9 +17,13 @@
   var createValidTitle = function () {
     if (titleInput.validity.tooShort) {
       return titleInput.setCustomValidity('Заголовок объявления должен состоять минимум из 30-ти символов');
-    } else if (titleInput.validity.tooLong) {
+    }
+
+    if (titleInput.validity.tooLong) {
       return titleInput.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
-    } else if (titleInput.validity.valueMissing) {
+    }
+
+    if (titleInput.validity.valueMissing) {
       return titleInput.setCustomValidity('Обязательное поле');
     }
 
@@ -37,9 +40,13 @@
   var createValidPrice = function () {
     if (priceInput.validity.rangeUnderflow) { // min
       return priceInput.setCustomValidity('Установленная цена меньше минимального значения');
-    } else if (priceInput.validity.rangeOverflow) { // max
+    }
+
+    if (priceInput.validity.rangeOverflow) { // max
       return priceInput.setCustomValidity('Установленная цена превышает максимальное значения');
-    } else if (priceInput.validity.valueMissing) {
+    }
+
+    if (priceInput.validity.valueMissing) {
       return priceInput.setCustomValidity('Обязательное поле');
     }
 
@@ -63,6 +70,13 @@
         return '';
     }
   };
+
+  (function () {
+    var value = getTypeHouse(typeHouseInput.value);
+
+    priceInput.min = value;
+    priceInput.placeholder = value;
+  })();
 
   typeHouseInput.addEventListener('change', function () {
     var value = getTypeHouse(typeHouseInput.value);

@@ -1,25 +1,21 @@
 'use strict';
 
-// добавляем атрибут disabled к полям формы
-//  window.util.addAttribute(window.global.fieldsetForm, 'disabled', 'disabled');
-
-// добавляем атрибут disabled к полям фильтра
-//  window.util.addAttribute(window.global.fieldsetFilters, 'disabled', 'disabled');
-//  window.util.addAttribute(window.global.selectFilters, 'disabled', 'disabled');
-
-
 (function () {
-
   var filters = document.querySelector('.map__filters');
   var fieldsetForm = window.global.form.querySelectorAll('fieldset');
   var fieldsetFilters = filters.querySelectorAll('fieldset');
   var selectFilters = filters.querySelectorAll('select');
 
-  window.map = {
+  // добавляем атрибут disabled к полям формы
+  window.util.addAttribute(fieldsetForm, 'disabled', 'disabled');
 
+  // добавляем атрибут disabled к полям фильтра
+  window.util.addAttribute(fieldsetFilters, 'disabled', 'disabled');
+  window.util.addAttribute(selectFilters, 'disabled', 'disabled');
+
+  window.map = {
   // отрисовка сгенерированных DOM-элементов в блок .map__pins
     addPinsData: function () {
-
       for (var i = 0; i < window.pinsData.length; i++) {
         window.global.pinsList.appendChild(window.pin.createPin(window.pinsData[i]));
       }
