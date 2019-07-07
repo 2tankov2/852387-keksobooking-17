@@ -1,0 +1,55 @@
+'use strict';
+
+// добавляем атрибут disabled к полям формы
+//  window.util.addAttribute(window.global.fieldsetForm, 'disabled', 'disabled');
+
+// добавляем атрибут disabled к полям фильтра
+//  window.util.addAttribute(window.global.fieldsetFilters, 'disabled', 'disabled');
+//  window.util.addAttribute(window.global.selectFilters, 'disabled', 'disabled');
+
+
+(function () {
+
+  var filters = document.querySelector('.map__filters');
+  var fieldsetForm = window.global.form.querySelectorAll('fieldset');
+  var fieldsetFilters = filters.querySelectorAll('fieldset');
+  var selectFilters = filters.querySelectorAll('select');
+
+  window.map = {
+
+  // отрисовка сгенерированных DOM-элементов в блок .map__pins
+    addPinsData: function () {
+
+      for (var i = 0; i < window.pinsData.length; i++) {
+        window.global.pinsList.appendChild(window.pin.createPin(window.pinsData[i]));
+      }
+    },
+
+    // функция активации страницы, в которой:
+    // убираем класс 'map--faded' у катры
+    // отрисовываем метки, которые будут описывать похожие объявления неподалёку
+    // убираем класс 'ad-form--disabled' у формы
+    // убираем класс 'ad-form--disabled' у фильтра
+    // убираем аттрибут disabled у элементов формы и фильтра
+    setActivePage: function () {
+      window.global.map.classList.remove('map--faded');
+      window.map.addPinsData();
+      window.global.form.classList.remove('ad-form--disabled');
+      filters.classList.remove('ad-form--disabled');
+      window.util.deleteAttribute(fieldsetForm, 'disabled', 'null');
+      window.util.deleteAttribute(fieldsetFilters, 'disabled', 'null');
+      window.util.deleteAttribute(selectFilters, 'disabled', 'null');
+    },
+
+    // записываем координаты главной метки в поле адреса формы
+    setPinCoordinates: function (pin) {
+      window.global.inputAddress.value = pin.x + ', ' + pin.y;
+    }
+  };
+
+  // активируем страницу и вписываем адрес главной метки в форму
+  window.global.pinMain.addEventListener('click', function () {
+    window.map.setActivePage();
+    window.map.setPinCoordinates(window.pinMainLocation);
+  });
+})();
