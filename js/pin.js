@@ -18,7 +18,6 @@
     // отрисовка DOM-элементов в блок .map__pins с данными сервера
     addPinsData: function () {
       var successHandler = (function (pinsData) {
-
         for (var i = 0; i < pinsData.length; i++) {
           window.global.pinsList.appendChild(createPin(pinsData[i]));
         }
@@ -26,7 +25,7 @@
 
       var errorHandler = function () {
         var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-        var errorElement = document.createElement(errorTemplate.cloneNode(true));
+        var errorElement = errorTemplate.cloneNode(true);
 
         window.global.blockMain.appendChild(errorElement);
       };

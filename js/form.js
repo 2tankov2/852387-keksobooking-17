@@ -125,7 +125,7 @@
 
     var errorHandler = function () {
       var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-      var errorElement = document.createElement(errorTemplate.cloneNode(true));
+      var errorElement = errorTemplate.cloneNode(true);
 
       window.global.blockMain.appendChild(errorElement);
     };
