@@ -113,4 +113,24 @@
 
     timeInInput.value = time;
   });
+
+  // отправка данных формы на сервер
+  var buttonForm = window.global.form.querySelector('.ad-form__submit');
+
+  window.global.form.addEventListener('submit', function (evt) {
+
+    var successHandler = function () {
+      buttonForm.setAttribute('disabled', 'disabled');
+    };
+
+    var errorHandler = function () {
+      var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+      var errorElement = document.createElement(errorTemplate.cloneNode(true));
+
+      window.global.blockMain.appendChild(errorElement);
+    };
+
+    window.upload(new FormData(window.global.form), successHandler, errorHandler);
+    evt.preventDefault();
+  });
 })();
