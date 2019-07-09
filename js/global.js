@@ -18,6 +18,8 @@ window.global = {
   pinMain: document.querySelector('.map__pin--main'),
   map: document.querySelector('.map'),
   form: document.querySelector('.ad-form'),
-  inputAddress: document.querySelector('#address')
+  inputAddress: document.querySelector('#address'),
+
+  blockMain: document.querySelector('main')
 };
 

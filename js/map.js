@@ -14,13 +14,6 @@
   window.util.addAttribute(selectFilters, 'disabled', 'disabled');
 
   window.map = {
-  // отрисовка сгенерированных DOM-элементов в блок .map__pins
-    addPinsData: function () {
-      for (var i = 0; i < window.pinsData.length; i++) {
-        window.global.pinsList.appendChild(window.pin.createPin(window.pinsData[i]));
-      }
-    },
-
     // функция активации страницы, в которой:
     // убираем класс 'map--faded' у катры
     // отрисовываем метки, которые будут описывать похожие объявления неподалёку
@@ -29,7 +22,7 @@
     // убираем аттрибут disabled у элементов формы и фильтра
     setActivePage: function () {
       window.global.map.classList.remove('map--faded');
-      window.map.addPinsData();
+      window.pin.addPinsData();
       window.global.form.classList.remove('ad-form--disabled');
       filters.classList.remove('ad-form--disabled');
       window.util.deleteAttribute(fieldsetForm, 'disabled', 'null');
