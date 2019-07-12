@@ -37,7 +37,7 @@
     window.mapFilters.filteredData = dataCopy.slice();
     // получаем массив данных после обработки фильтров
     filterFunctions.forEach(function (getFiltered) {
-      window.mapFilters.filteredData = getFiltered(window.mapFilters.filteredData);
+      window.mapFilters.filteredData = getFiltered(window.mapFilters.filteredData).concat(dataCopy);
     });
     // выводим необходимое кол-во элементов
     if (window.mapFilters.filteredData.length > TAKE_NUMBER_PIN) {

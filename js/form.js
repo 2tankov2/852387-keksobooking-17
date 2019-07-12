@@ -7,105 +7,116 @@
   // находим и сохраняем объекты, которые понадобятся (с которыми будем работать)
   var form = document.querySelector('.ad-form');
   var fieldsetForm = form.querySelectorAll('fieldset');
-  var titleHouse = form.querySelector('#title');
-  var priceInput = form.querySelector('#price');
-  var typeHouseInput = form.querySelector('#type');
-  var timeInInput = form.querySelector('#timein');
-  var timeOutInput = form.querySelector('#timeout');
-  var inputAddress = form.querySelector('#address');
+  var titleHousing = form.querySelector('#title');
+  var priceHousing = form.querySelector('#price');
+  var typeHousing = form.querySelector('#type');
+  var timeInHousing = form.querySelector('#timein');
+  var timeOutHousing = form.querySelector('#timeout');
+  var addressHousing = form.querySelector('#address');
 
   // функция сброса полей в начальное состояние
   var resetForm = function () {
-    window.loadUpload.removeError();
-    titleHouse.value = '';
-    titleHouse.placeholder = 'Милая, но очень уютная квартирка в центре Токио';
+    // window.loadUpload.removeError();
+    titleHousing.value = '';
+    titleHousing.placeholder = 'Милая, но очень уютная квартирка в центре Токио';
     window.form.setPinCoordinates();
     // валидация поля "адрес"
-    window.global.inputAddress.setAttribute('readonly', 'readonly');
-    typeHouseInput.value = 'flat';
-    priceInput.value = '5000';
-    timeInInput.value = '12:00';
-    timeOutInput = '12:00';
+    addressHousing.setAttribute('readonly', 'readonly');
+    typeHousing.value = 'flat';
+    priceHousing.value = '5000';
+    timeInHousing.value = '12:00';
+    timeOutHousing.value = '12:00';
   };
 
   // синхронизация полей тип_жилья - цена, время_заезда - время_выезда
-  var syncValue = function (element, value) {
+  var syncValues = function (element, value) {
     element.value = value;
   };
   var syncValueWhithMin = function (element, value) {
     element.min = value;
+    element.placeholder = value;
   };
   // заголовок
+  titleHousing.setAttribute('required', 'required');
+  titleHousing.setAttribute('minlength', '30');
+  titleHousing.setAttribute('maxlength', '100');
+
   var createValidTitle = function () {
-    if (titleHouse.validity.tooShort) {
-      return titleHouse.setCustomValidity('Заголовок объявления должен состоять минимум из 30-ти символов');
+    if (titleHousing.validity.tooShort) {
+      return titleHousing.setCustomValidity('Заголовок объявления должен состоять минимум из 30-ти символов');
     }
 
-    if (titleHouse.validity.tooLong) {
-      return titleHouse.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
+    if (titleHousing.validity.tooLong) {
+      return titleHousing.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
     }
 
-    if (titleHouse.validity.valueMissing) {
-      return titleHouse.setCustomValidity('Обязательное поле');
+    if (titleHousing.validity.valueMissing) {
+      return titleHousing.setCustomValidity('Обязательное поле');
     }
 
-    return titleHouse.setCustomValidity('');
+    return titleHousing.setCustomValidity('');
   };
   // автосинхронизация "типа жилья" и "цены за ночь"
   var onTypeChange = function () {
-    window.util.synchronFields(typeHouseInput, priceInput, HOUSE_TYPE, MIN_PRICES, syncValueWhithMin);
+    window.util.synchronFields(typeHousing, priceHousing, HOUSE_TYPE, MIN_PRICES, syncValueWhithMin);
   };
   // автосинхронизация "время заезда" и "время выезда"
   var onTimeInChange = function () {
-    window.util.synchronFields(timeInInput, timeOutInput, TIME_CHECKS, TIME_CHECKS, syncValue);
+    window.util.synchronFields(timeInHousing, timeOutHousing, TIME_CHECKS, TIME_CHECKS, syncValues);
   };
   var onTimeOutChange = function () {
-    window.util.synchronFields(timeOutInput, timeInInput, TIME_CHECKS, TIME_CHECKS, syncValue);
+    window.util.synchronFields(timeOutHousing, timeInHousing, TIME_CHECKS, TIME_CHECKS, syncValues);
   };
   // валидация поля "цена за ночь"
+  priceHousing.setAttribute('required', 'required');
+  priceHousing.setAttribute('max', '1000000');
+  priceHousing.setAttribute('min', '0');
+
   var createValidPrice = function () {
-    if (priceInput.validity.rangeUnderflow) { // min
-      return priceInput.setCustomValidity('Установленная цена меньше минимального значения');
+    if (priceHousing.validity.rangeUnderflow) { // min
+      return priceHousing.setCustomValidity('Установленная цена меньше минимального значения');
     }
 
-    if (priceInput.validity.rangeOverflow) { // max
-      return priceInput.setCustomValidity('Установленная цена превышает максимальное значения');
+    if (priceHousing.validity.rangeOverflow) { // max
+      return priceHousing.setCustomValidity('Установленная цена превышает максимальное значения');
     }
 
-    if (priceInput.validity.valueMissing) {
-      return priceInput.setCustomValidity('Обязательное поле');
+    if (priceHousing.validity.valueMissing) {
+      return priceHousing.setCustomValidity('Обязательное поле');
     }
 
-    return priceInput.setCustomValidity('');
+    return priceHousing.setCustomValidity('');
   };
+
   // отправка данных формы на сервер
   var onFormSubmit = function (evt) {
-    window.loadUpload.save(new FormData(form), resetForm, window.loadUpload.onError);
+    window.loadUpload.upload(new FormData(form), resetForm, window.loadUpload.onErrorLoad);
     evt.preventDefault();
   };
   // обработчик правильности заполнения заголовка
-  titleHouse.addEventListener('invalid', createValidTitle);
+  titleHousing.addEventListener('invalid', createValidTitle);
   // обработчик правильности заполнения стоимости за ночь
-  priceInput.addEventListener('invalid', createValidPrice);
+  priceHousing.addEventListener('invalid', createValidPrice);
   // обработчик изменения типа жилья
-  typeHouseInput.addEventListener('change', onTypeChange);
+  typeHousing.addEventListener('change', onTypeChange);
   // обработчик изменения времени вЪезда
-  timeInInput.addEventListener('change', onTimeInChange);
+  timeInHousing.addEventListener('change', onTimeInChange);
   // обработчик изменения времени выезда
-  timeOutInput.addEventListener('change', onTimeOutChange);
+  timeOutHousing.addEventListener('change', onTimeOutChange);
   // обработчик отправки формы на сервер
   form.addEventListener('submit', onFormSubmit);
 
   window.form = {
   // записываем координаты главной метки в поле адреса формы
     setPinCoordinates: function () {
-      inputAddress.value = window.coordsPinMain.getCoords();
+      addressHousing.value = window.coordsPinMain.getCoords();
     },
     // активация формы
     active: function () {
       form.classList.remove('ad-form--disabled');
       [].forEach.call(fieldsetForm, function (element) {
-        element.removeAttrebute('disabled', 'disabled');
+        element.removeAttribute('disabled', 'disabled');
+        addressHousing.setAttribute('readonly', 'readonly');
       });
       window.form.setPinCoordinates();
     },

@@ -4,7 +4,7 @@
   // главная часть - карта
   var contanerMap = document.querySelector('.map');
   // список маркеров на карте
-  var pinsList = document.querySelector('.map__pins');
+  var pinsList = contanerMap.querySelector('.map__pins');
   // фрагмент документа с маркерами для вставки
   var pinsFragment = document.createDocumentFragment();
   // нажатие на гланый маркер и активация страницы
@@ -18,12 +18,13 @@
   };
   // загрузка данных
   var onSuccessLoad = function (data) {
-    window.mapFilters.trasferData(data);
-    window.LoadUpload.removeError();
-    window.mapFilters.fiilteredData.forEach(window.pin.render, pinsFragment);
+    window.mapFilters.transferData(data);
+    // window.loadUpload.removeError();
+    window.mapFilters.filteredData.forEach(window.pin.render, pinsFragment);
     // доступ пользователю
-    window.pinMain.pinGlobal.addEventListener('mouseup', setActivePage);
+    window.coordsPinMain.pinGlobal.addEventListener('mouseup', setActivePage);
   };
+
   // начальное состояние формы
   window.form.initState();
   // загружаем данные с сервера
@@ -33,14 +34,14 @@
     // функия добавления маркеров на страницу
     appendPins: function () {
       // функция очистки карты от меток
-      var childs = pinsList.querySelectorAll('.map_pin');
+      var childs = pinsList.querySelectorAll('.map__pin');
       [].forEach.call(childs, function (element) {
-        if (!Element.classList.contains('map__pin--main')) {
+        if (!element.classList.contains('map__pin--main')) {
           pinsList.removeChild(element);
         }
       });
-      // заполняем фрагмент оотфильтрованными метками
-      window.mapFilters.fiilteredData.forEach(window.pin.render, pinsFragment);
+      // заполняем фрагмент отфильтрованными метками
+      window.mapFilters.filteredData.forEach(window.pin.render, pinsFragment);
       // добавляем метки на карту
       pinsList.appendChild(pinsFragment);
     }

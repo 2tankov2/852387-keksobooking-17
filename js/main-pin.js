@@ -8,8 +8,6 @@
   var widthMap = document.querySelector('.map').offsetWidth;
   // метка в центре карты
   var pinMain = document.querySelector('.map__pin--main');
-  // контейнер скрывающий карту
-  var pinsoverlay = document.querySelector('.map__overlay');
   // сохраняем координаты главной метки в объект
   var pinMainLocation = {
     x: pinMain.getBoundingClientRect().left + PINMAIN_WIDTH / 2,
@@ -59,6 +57,7 @@
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
+      pinMainLocation = startCoords;
       pinMain.style.left = getPosition(pinMain.offsetLeft, shift.x, locationMap.min.x, locationMap.max.x);
       pinMain.style.top = getPosition(pinMain.offsetTop, shift.y, locationMap.min.y, locationMap.max.y);
     };
@@ -79,9 +78,7 @@
   window.coordsPinMain = {
     pinGlobal: pinMain,
     getCoords: function () {
-      var boxOverlay = pinsoverlay.getBoundingClientRect();
-
-      return Math.round(pinMainLocation.x - boxOverlay.left) + ', ' + Math.round(pinMainLocation.y + pageXOffset);
+      return Math.round(pinMainLocation.x) + ', ' + Math.round(pinMainLocation.y + pageXOffset);
     }
   };
 })();
