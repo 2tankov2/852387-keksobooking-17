@@ -1,42 +1,68 @@
 'use strict';
 
 (function () {
-// ВАЛИДАЦИЯ ФОРМЫ
-// находим и сохраняем объекты, которые понадобятся (с которыми будем работать)
-  var titleInput = window.global.form.querySelector('#title');
-  var priceInput = window.global.form.querySelector('#price');
-  var typeHouseInput = window.global.form.querySelector('#type');
-  var timeInInput = window.global.form.querySelector('#timein');
-  var timeOutInput = window.global.form.querySelector('#timeout');
+  var HOUSE_TYPE = ['flat', 'bungalo', 'house', 'palace'];
+  var TIME_CHECKS = ['12:00', '13:00', '14:00'];
+  var MIN_PRICES = [1000, 0, 5000, 10000];
+  // находим и сохраняем объекты, которые понадобятся (с которыми будем работать)
+  var form = document.querySelector('.ad-form');
+  var fieldsetForm = form.querySelectorAll('fieldset');
+  var titleHouse = form.querySelector('#title');
+  var priceInput = form.querySelector('#price');
+  var typeHouseInput = form.querySelector('#type');
+  var timeInInput = form.querySelector('#timein');
+  var timeOutInput = form.querySelector('#timeout');
+  var inputAddress = form.querySelector('#address');
 
-  // заголовок
-  titleInput.setAttribute('required', 'required');
-  titleInput.setAttribute('minlength', '30');
-  titleInput.setAttribute('maxlength', '100');
-
-  var createValidTitle = function () {
-    if (titleInput.validity.tooShort) {
-      return titleInput.setCustomValidity('Заголовок объявления должен состоять минимум из 30-ти символов');
-    }
-
-    if (titleInput.validity.tooLong) {
-      return titleInput.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
-    }
-
-    if (titleInput.validity.valueMissing) {
-      return titleInput.setCustomValidity('Обязательное поле');
-    }
-
-    return titleInput.setCustomValidity('');
+  // функция сброса полей в начальное состояние
+  var resetForm = function () {
+    window.loadUpload.removeError();
+    titleHouse.value = '';
+    titleHouse.placeholder = 'Милая, но очень уютная квартирка в центре Токио';
+    window.form.setPinCoordinates();
+    // валидация поля "адрес"
+    window.global.inputAddress.setAttribute('readonly', 'readonly');
+    typeHouseInput.value = 'flat';
+    priceInput.value = '5000';
+    timeInInput.value = '12:00';
+    timeOutInput = '12:00';
   };
 
-  titleInput.addEventListener('invalid', createValidTitle);
+  // синхронизация полей тип_жилья - цена, время_заезда - время_выезда
+  var syncValue = function (element, value) {
+    element.value = value;
+  };
+  var syncValueWhithMin = function (element, value) {
+    element.min = value;
+  };
+  // заголовок
+  var createValidTitle = function () {
+    if (titleHouse.validity.tooShort) {
+      return titleHouse.setCustomValidity('Заголовок объявления должен состоять минимум из 30-ти символов');
+    }
 
+    if (titleHouse.validity.tooLong) {
+      return titleHouse.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
+    }
+
+    if (titleHouse.validity.valueMissing) {
+      return titleHouse.setCustomValidity('Обязательное поле');
+    }
+
+    return titleHouse.setCustomValidity('');
+  };
+  // автосинхронизация "типа жилья" и "цены за ночь"
+  var onTypeChange = function () {
+    window.util.synchronFields(typeHouseInput, priceInput, HOUSE_TYPE, MIN_PRICES, syncValueWhithMin);
+  };
+  // автосинхронизация "время заезда" и "время выезда"
+  var onTimeInChange = function () {
+    window.util.synchronFields(timeInInput, timeOutInput, TIME_CHECKS, TIME_CHECKS, syncValue);
+  };
+  var onTimeOutChange = function () {
+    window.util.synchronFields(timeOutInput, timeInInput, TIME_CHECKS, TIME_CHECKS, syncValue);
+  };
   // валидация поля "цена за ночь"
-  priceInput.setAttribute('required', 'required');
-  priceInput.setAttribute('max', '1000000');
-  priceInput.setAttribute('min', '0');
-
   var createValidPrice = function () {
     if (priceInput.validity.rangeUnderflow) { // min
       return priceInput.setCustomValidity('Установленная цена меньше минимального значения');
@@ -50,87 +76,44 @@
       return priceInput.setCustomValidity('Обязательное поле');
     }
 
-    return titleInput.setCustomValidity('');
+    return priceInput.setCustomValidity('');
   };
-
-  priceInput.addEventListener('invalid', createValidPrice);
-
-  // валидация поля "тип жилья"
-  var getTypeHouse = function (type) {
-    switch (type) {
-      case 'bungalo':
-        return 0;
-      case 'flat':
-        return 1000;
-      case 'house':
-        return 5000;
-      case 'palace':
-        return 10000;
-      default:
-        return '';
-    }
-  };
-
-  (function () {
-    var value = getTypeHouse(typeHouseInput.value);
-
-    priceInput.min = value;
-    priceInput.placeholder = value;
-  })();
-
-  typeHouseInput.addEventListener('change', function () {
-    var value = getTypeHouse(typeHouseInput.value);
-
-    priceInput.min = value;
-    priceInput.placeholder = value;
-  });
-
-  // валидация поля "адрес"
-  window.global.inputAddress.setAttribute('readonly', 'readonly');
-
-  // валидация поля "время заезда"
-  var getTime = function (time) {
-    switch (time) {
-      case '12:00':
-        return '12:00';
-      case '13:00':
-        return '13:00';
-      case '14:00':
-        return '14:00';
-      default:
-        return '';
-    }
-  };
-
-  timeInInput.addEventListener('change', function () {
-    var time = getTime(timeInInput.value);
-
-    timeOutInput.value = time;
-  });
-
-  timeOutInput.addEventListener('change', function () {
-    var time = getTime(timeOutInput.value);
-
-    timeInInput.value = time;
-  });
-
   // отправка данных формы на сервер
-  var buttonForm = window.global.form.querySelector('.ad-form__submit');
-
-  window.global.form.addEventListener('submit', function (evt) {
-
-    var successHandler = function () {
-      buttonForm.setAttribute('disabled', 'disabled');
-    };
-
-    var errorHandler = function () {
-      var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-      var errorElement = errorTemplate.cloneNode(true);
-
-      window.global.blockMain.appendChild(errorElement);
-    };
-
-    window.upload(new FormData(window.global.form), successHandler, errorHandler);
+  var onFormSubmit = function (evt) {
+    window.loadUpload.save(new FormData(form), resetForm, window.loadUpload.onError);
     evt.preventDefault();
-  });
+  };
+  // обработчик правильности заполнения заголовка
+  titleHouse.addEventListener('invalid', createValidTitle);
+  // обработчик правильности заполнения стоимости за ночь
+  priceInput.addEventListener('invalid', createValidPrice);
+  // обработчик изменения типа жилья
+  typeHouseInput.addEventListener('change', onTypeChange);
+  // обработчик изменения времени вЪезда
+  timeInInput.addEventListener('change', onTimeInChange);
+  // обработчик изменения времени выезда
+  timeOutInput.addEventListener('change', onTimeOutChange);
+  // обработчик отправки формы на сервер
+  form.addEventListener('submit', onFormSubmit);
+
+  window.form = {
+  // записываем координаты главной метки в поле адреса формы
+    setPinCoordinates: function () {
+      inputAddress.value = window.coordsPinMain.getCoords();
+    },
+    // активация формы
+    active: function () {
+      form.classList.remove('ad-form--disabled');
+      [].forEach.call(fieldsetForm, function (element) {
+        element.removeAttrebute('disabled', 'disabled');
+      });
+      window.form.setPinCoordinates();
+    },
+    // начальное состояние страницы
+    initState: function () {
+      [].forEach.call(fieldsetForm, function (element) {
+        element.setAttribute('disabled', 'disabled');
+      });
+    }
+  };
 })();
