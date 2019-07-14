@@ -1,44 +1,49 @@
 'use strict';
 
 (function () {
-  var filters = document.querySelector('.map__filters');
-  var fieldsetForm = window.global.form.querySelectorAll('fieldset');
-  var fieldsetFilters = filters.querySelectorAll('fieldset');
-  var selectFilters = filters.querySelectorAll('select');
-
-  // добавляем атрибут disabled к полям формы
-  window.util.addAttribute(fieldsetForm, 'disabled', 'disabled');
-
-  // добавляем атрибут disabled к полям фильтра
-  window.util.addAttribute(fieldsetFilters, 'disabled', 'disabled');
-  window.util.addAttribute(selectFilters, 'disabled', 'disabled');
-
-  window.map = {
-    // функция активации страницы, в которой:
+  // главная часть - карта
+  var contanerMap = document.querySelector('.map');
+  // список маркеров на карте
+  var pinsList = contanerMap.querySelector('.map__pins');
+  // фрагмент документа с маркерами для вставки
+  var pinsFragment = document.createDocumentFragment();
+  // нажатие на гланый маркер и активация страницы
+  var setActivePage = function () {
     // убираем класс 'map--faded' у катры
-    // отрисовываем метки, которые будут описывать похожие объявления неподалёку
-    // убираем класс 'ad-form--disabled' у формы
-    // убираем класс 'ad-form--disabled' у фильтра
-    // убираем аттрибут disabled у элементов формы и фильтра
-    setActivePage: function () {
-      window.global.map.classList.remove('map--faded');
-      window.pin.addPinsData();
-      window.global.form.classList.remove('ad-form--disabled');
-      filters.classList.remove('ad-form--disabled');
-      window.util.deleteAttribute(fieldsetForm, 'disabled', 'null');
-      window.util.deleteAttribute(fieldsetFilters, 'disabled', 'null');
-      window.util.deleteAttribute(selectFilters, 'disabled', 'null');
-    },
-
-    // записываем координаты главной метки в поле адреса формы
-    setPinCoordinates: function (pin) {
-      window.global.inputAddress.value = pin.x + ', ' + pin.y;
-    }
+    contanerMap.classList.remove('map--faded');
+    // добавляем маркеры для вставки в документ
+    pinsList.appendChild(pinsFragment);
+    // активируем форму
+    window.form.active();
+  };
+  // загрузка данных
+  var onSuccessLoad = function (data) {
+    window.mapFilters.transferData(data);
+    // window.loadUpload.removeError();
+    window.mapFilters.filteredData.forEach(window.pin.render, pinsFragment);
+    // доступ пользователю
+    window.coordsPinMain.pinGlobal.addEventListener('mouseup', setActivePage);
   };
 
-  // активируем страницу и вписываем адрес главной метки в форму
-  window.global.pinMain.addEventListener('click', function () {
-    window.map.setActivePage();
-    window.map.setPinCoordinates(window.pinMainLocation);
-  });
+  // начальное состояние формы
+  window.form.initState();
+  // загружаем данные с сервера
+  window.loadUpload.load(onSuccessLoad, window.loadUpload.onErrorLoad);
+
+  window.map = {
+    // функия добавления маркеров на страницу
+    appendPins: function () {
+      // функция очистки карты от меток
+      var childs = pinsList.querySelectorAll('.map__pin');
+      [].forEach.call(childs, function (element) {
+        if (!element.classList.contains('map__pin--main')) {
+          pinsList.removeChild(element);
+        }
+      });
+      // заполняем фрагмент отфильтрованными метками
+      window.mapFilters.filteredData.forEach(window.pin.render, pinsFragment);
+      // добавляем метки на карту
+      pinsList.appendChild(pinsFragment);
+    }
+  };
 })();

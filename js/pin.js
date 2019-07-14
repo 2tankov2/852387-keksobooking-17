@@ -1,36 +1,32 @@
 'use strict';
 
 (function () {
-  // создаём DOM-элементы, соответствующие меткам на карте,
-  // и заполняем их данными из массива
-  var createPin = function (pin) {
-    var pinElement = window.global.pinTemplate.cloneNode(true);
-
-    pinElement.style = 'left: ' + (pin.location.x - window.global.PIN_WIDTH / 2) + 'px; top: ' + (pin.location.y - window.global.PIN_HEIGHT) + 'px;';
-    pinElement.firstChild.src = pin.author.avatar;
-    pinElement.alt = 'заголовок объявления';
-    pinElement.title = pin.offer.title;
-
-    return pinElement;
+  // размеры меток
+  var PIN_WIDTH = 50;
+  var PIN_HEIGHT = 70;
+  // метка на карте - шаблон
+  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+  // координаты учитывая смещение из-за размера меток
+  var pinCoorX = function (x) {
+    return (x - PIN_WIDTH / 2) + 'px';
   };
-
+  var pinCoorY = function (y) {
+    return (y - PIN_HEIGHT) + 'px';
+  };
+  // функция формирования метки
   window.pin = {
-    // отрисовка DOM-элементов в блок .map__pins с данными сервера
-    addPinsData: function () {
-      var successHandler = (function (pinsData) {
-        for (var i = 0; i < pinsData.length; i++) {
-          window.global.pinsList.appendChild(createPin(pinsData[i]));
-        }
-      });
+    render: function (pinData, i) {
+      var pinElement = pinTemplate.cloneNode(true);
+      var pinImgElement = pinElement.querySelector('img');
 
-      var errorHandler = function () {
-        var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-        var errorElement = errorTemplate.cloneNode(true);
-
-        window.global.blockMain.appendChild(errorElement);
-      };
-
-      window.load(successHandler, errorHandler);
+      pinElement.style.left = pinCoorX(pinData.location.x);
+      pinElement.style.top = pinCoorY(pinData.location.y);
+      pinElement.alt = 'заголовок объявления';
+      pinImgElement.src = pinData.author.avatar;
+      pinImgElement.title = pinData.offer.title;
+      pinElement.dataset.numPin = i;
+      this.appendChild(pinElement);
+      return this;
     }
   };
 })();
