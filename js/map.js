@@ -5,6 +5,8 @@
   var contanerMap = document.querySelector('.map');
   // список маркеров на карте
   var pinsList = contanerMap.querySelector('.map__pins');
+  // блок с фильтрами
+  var filtersContainer = contanerMap.querySelector('.map__filters-container');
   // фрагмент документа с маркерами для вставки
   var pinsFragment = document.createDocumentFragment();
   // нажатие на гланый маркер и активация страницы
@@ -13,6 +15,8 @@
     contanerMap.classList.remove('map--faded');
     // добавляем маркеры для вставки в документ
     pinsList.appendChild(pinsFragment);
+    // добавляем карточку для первого пина
+    pinsList.insertBefore(window.card.appendCard(), filtersContainer);
     // активируем форму
     window.form.active();
   };
