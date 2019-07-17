@@ -33,7 +33,8 @@
   var render = function (cardData) {
     titleCard.textContent = cardData.offer.title;
     cardAddress.textContent = cardData.offer.address;
-    cardPrice.textContent = cardData.offer.price + '&#x20bd;/ночь';
+    cardPrice.innerHTML = '';
+    cardPrice.insertAdjacentHTML('afterBegin', cardData.offer.price + '&#x20bd;/ночь');
     cardType.textContent = offerType[cardData.offer.type];
     cardCapasity.textContent = cardData.offer.rooms + ' комнаты для ' + cardData.offer.guests + ' гостей';
     cardTime.textContent = 'Заезд после ' + cardData.offer.checkin + ', выезд до ' + cardData.offer.checkout;
@@ -49,8 +50,8 @@
   };
   window.card = {
     appendCard: function () {
-      render(window.mapFilters.filteredData[0]);
-      return mapCard;
+      var cardFragment = document.createDocumentFragment();
+      return render(window.mapFilters.filteredData[0], cardFragment);
     }
   };
 })();
