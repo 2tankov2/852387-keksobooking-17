@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-// данные карточки объекта недвижимости
+  // данные карточки объекта недвижимости
   var card = document.querySelector('#card').content.querySelector('.map__card');
   var mapCard = card.cloneNode(true);
   var titleCard = mapCard.querySelector('.popup__title');
@@ -34,7 +34,7 @@
     titleCard.textContent = cardData.offer.title;
     cardAddress.textContent = cardData.offer.address;
     cardPrice.innerHTML = '';
-    cardPrice.insertAdjacentHTML('afterBegin', cardData.offer.price + '&#x20bd;/ночь');
+    cardPrice.insertAdjacentHTML('afterBegin', cardData.offer.price + ' &#x20bd;/ночь');
     cardType.textContent = offerType[cardData.offer.type];
     cardCapasity.textContent = cardData.offer.rooms + ' комнаты для ' + cardData.offer.guests + ' гостей';
     cardTime.textContent = 'Заезд после ' + cardData.offer.checkin + ', выезд до ' + cardData.offer.checkout;
@@ -50,8 +50,7 @@
   };
   window.card = {
     appendCard: function () {
-      var cardFragment = document.createDocumentFragment();
-      return render(window.mapFilters.filteredData[0], cardFragment);
+      return render(window.mapFilters.filteredData[0]);
     }
   };
 })();

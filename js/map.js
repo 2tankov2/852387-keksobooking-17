@@ -9,6 +9,8 @@
   var filtersContainer = contanerMap.querySelector('.map__filters-container');
   // фрагмент документа с маркерами для вставки
   var pinsFragment = document.createDocumentFragment();
+  // фрагмент документа с карточкой для вставки
+  var cardFragment = document.createDocumentFragment();
   // нажатие на гланый маркер и активация страницы
   var setActivePage = function () {
     // убираем класс 'map--faded' у катры
@@ -16,7 +18,7 @@
     // добавляем маркеры для вставки в документ
     pinsList.appendChild(pinsFragment);
     // добавляем карточку для первого пина
-    contanerMap.insertBefore(window.card.appendCard(), filtersContainer);
+    contanerMap.insertBefore(window.card.appendCard(cardFragment), filtersContainer);
     // активируем форму
     window.form.active();
   };
