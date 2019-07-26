@@ -22,29 +22,47 @@
     palace: 'Дворец'
   };
   // функция вставки строки для списка удобств
-  var getStringFeatures = function (item) {
-    return '<li class="popup__feature popup__feature--' + item + '"></li>';
+  var getFeatures = function (featureArray, element) {
+    var childElement = element.querySelectorAll('li');
+    for (var i = 0; i < childElement.length; i++) {
+      element.removeChild(childElement[i]);
+    }
+    for (var j = 0; j < featureArray.length; j++) {
+      var className = 'popup__feature';
+      var newElement = document.createElement('li');
+      newElement.classList.add(className);
+      var feature = 'popup__feature--' + featureArray[j];
+      newElement.classList.add(feature);
+      element.appendChild(newElement);
+    }
   };
   // функция вставки фото
-  var getStringPhotos = function (item) {
-    return '<img src="' + item + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">';
+  var renderPhotos = function (photodArray, element) {
+    if (photodArray.length === 0) {
+      element.querySelector('.popup__photo').classList.add('hidden');
+    } else {
+      for (var i = 0; i < photodArray.length; i++) {
+        if (i === 0) {
+          element.querySelector('img').setAttribute('src', photodArray[i]);
+        } else {
+          var newElement = element.querySelector('img').cloneNode(true);
+          newElement.src = photodArray[i];
+          element.appendChild(newElement);
+        }
+      }
+    }
   };
   // формируем карточку
   var render = function (cardData) {
     titleCard.textContent = cardData.offer.title;
     cardAddress.textContent = cardData.offer.address;
-    cardPrice.innerHTML = '';
-    cardPrice.insertAdjacentHTML('afterBegin', cardData.offer.price + ' &#x20bd;/ночь');
+    cardPrice.textContent = cardData.offer.price + ' ₽/ночь';
     cardType.textContent = offerType[cardData.offer.type];
     cardCapasity.textContent = cardData.offer.rooms + ' комнаты для ' + cardData.offer.guests + ' гостей';
     cardTime.textContent = 'Заезд после ' + cardData.offer.checkin + ', выезд до ' + cardData.offer.checkout;
-    cardFeatures.innerHTML = '';
-    cardFeatures.insertAdjacentHTML('afterBegin', cardData.offer.features.map(getStringFeatures).join(' '));
-    mapCard.appendChild(cardFeatures);
+    getFeatures(cardData.offer.features, cardFeatures);
     cardDescription.textContent = cardData.offer.description;
-    cardPhotos.innerHTML = '';
-    cardPhotos.insertAdjacentHTML('afterBegin', cardData.offer.photos.map(getStringPhotos).join(' '));
-    mapCard.appendChild(cardPhotos);
+    renderPhotos(cardData.offer.photos, cardPhotos);
     cardAvatar.src = cardData.author.avatar;
     return mapCard;
   };

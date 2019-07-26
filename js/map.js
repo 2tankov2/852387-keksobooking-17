@@ -18,7 +18,7 @@
     // добавляем маркеры для вставки в документ
     pinsList.appendChild(pinsFragment);
     // добавляем карточку для первого пина
-    contanerMap.insertBefore(window.card.appendCard(cardFragment), filtersContainer);
+    contanerMap.insertBefore(cardFragment.appendChild(window.card.appendCard()), filtersContainer);
     // активируем форму
     window.form.active();
   };
