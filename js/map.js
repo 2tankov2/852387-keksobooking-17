@@ -5,14 +5,20 @@
   var contanerMap = document.querySelector('.map');
   // список маркеров на карте
   var pinsList = contanerMap.querySelector('.map__pins');
+  // блок с фильтрами
+  var filtersContainer = contanerMap.querySelector('.map__filters-container');
   // фрагмент документа с маркерами для вставки
   var pinsFragment = document.createDocumentFragment();
+  // фрагмент документа с карточкой для вставки
+  var cardFragment = document.createDocumentFragment();
   // нажатие на гланый маркер и активация страницы
   var setActivePage = function () {
     // убираем класс 'map--faded' у катры
     contanerMap.classList.remove('map--faded');
     // добавляем маркеры для вставки в документ
     pinsList.appendChild(pinsFragment);
+    // добавляем карточку для первого пина
+    contanerMap.insertBefore(cardFragment.appendChild(window.card.appendCard()), filtersContainer);
     // активируем форму
     window.form.active();
   };
