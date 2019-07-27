@@ -17,11 +17,15 @@
     contanerMap.classList.remove('map--faded');
     // добавляем маркеры для вставки в документ
     pinsList.appendChild(pinsFragment);
-    // добавляем карточку для первого пина
-    contanerMap.insertBefore(cardFragment.appendChild(window.card.appendCard()), filtersContainer);
     // активируем форму
     window.form.active();
   };
+
+  // Клик по маркеру
+  var onPinClick = function (evt) {
+    window.card.renderAndOpen(evt.target, pinsList);
+  };
+
   // загрузка данных
   var onSuccessLoad = function (data) {
     window.mapFilters.transferData(data);
@@ -35,6 +39,10 @@
   window.form.initState();
   // загружаем данные с сервера
   window.loadUpload.load(onSuccessLoad, window.loadUpload.onErrorLoad);
+  // Добавляем карточку недвижимости на страницу и скрываем ее
+  contanerMap.insertBefore(cardFragment.appendChild(window.card.renderAndOpen(window.coordsPinMain.pinGlobal, pinsList)), filtersContainer);
+  // Клик на маркер ловим на контейнере
+  pinsList.addEventListener('click', onPinClick);
 
   window.map = {
     // функия добавления маркеров на страницу
