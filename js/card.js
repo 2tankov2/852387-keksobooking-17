@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  // Код для клавиатуры
+  var KEY_ESC = 27;
   // данные карточки объекта недвижимости
   var card = document.querySelector('#card').content.querySelector('.map__card');
   var mapCard = card.cloneNode(true);
@@ -14,6 +16,8 @@
   var cardDescription = mapCard.querySelector('.popup__description');
   var cardPhotos = mapCard.querySelector('.popup__photos');
   var cardAvatar = mapCard.querySelector('.popup__avatar');
+  var mapCardClose = mapCard.querySelector('.popup__close');
+
   // типы жилья
   var offerType = {
     flat: 'Квартира',
@@ -66,6 +70,26 @@
     cardAvatar.src = cardData.author.avatar;
     return mapCard;
   };
+  // Реакция на нажатие ESC
+  var onPopupEscPress = function (evt) {
+    if (evt.keyCode === KEY_ESC) {
+      closePopup();
+    }
+  };
+  // Закрыть карточку мышкой
+  var onCardCloseClick = function () {
+    closePopup();
+  };
+  // Закрыть карточку
+  var closePopup = function () {
+    mapCard.classList.add('hidden');
+    document.removeEventListener('keydown', onPopupEscPress);
+  };
+  // Закрытие карточки по нажатию мышки
+  mapCardClose.addEventListener('click', onCardCloseClick);
+  // Закрытие карточки с клавиатуры
+  document.addEventListener('keydown', onPopupEscPress);
+
   window.card = {
     appendCard: function () {
       return render(window.mapFilters.filteredData[0]);
