@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  // Код для клавиатуры
+  var KEY_ESC = 27;
   // данные карточки объекта недвижимости
   var card = document.querySelector('#card').content.querySelector('.map__card');
   var mapCard = card.cloneNode(true);
@@ -14,6 +16,9 @@
   var cardDescription = mapCard.querySelector('.popup__description');
   var cardPhotos = mapCard.querySelector('.popup__photos');
   var cardAvatar = mapCard.querySelector('.popup__avatar');
+  var mapCardClose = mapCard.querySelector('.popup__close');
+  // Текущий маркер
+  var currentPin = false;
   // типы жилья
   var offerType = {
     flat: 'Квартира',
@@ -38,6 +43,12 @@
   };
   // функция вставки фото
   var renderPhotos = function (photodArray, element) {
+    var childElement = element.querySelectorAll('img');
+    if (childElement.length > 0) {
+      for (var j = 0; j < childElement.length - 1; j++) {
+        element.removeChild(childElement[j]);
+      }
+    }
     if (photodArray.length === 0) {
       element.querySelector('.popup__photo').classList.add('hidden');
     } else {
@@ -52,6 +63,7 @@
       }
     }
   };
+
   // формируем карточку
   var render = function (cardData) {
     titleCard.textContent = cardData.offer.title;
@@ -66,9 +78,53 @@
     cardAvatar.src = cardData.author.avatar;
     return mapCard;
   };
+  // Сброс активного маркера
+  var pinDeactivate = function () {
+    if (currentPin !== false) {
+      currentPin.classList.remove('map__pin--active');
+    }
+  };
+  // Реакция на нажатие ESC
+  var onPopupEscPress = function (evt) {
+    if (evt.keyCode === KEY_ESC) {
+      closePopup();
+    }
+  };
+  // Закрыть карточку мышкой
+  var onCardCloseClick = function () {
+    closePopup();
+  };
+  // Закрыть карточку
+  var closePopup = function () {
+    mapCard.classList.add('hidden');
+    document.removeEventListener('keydown', onPopupEscPress);
+  };
+  // Закрытие карточки по нажатию мышки
+  mapCardClose.addEventListener('click', onCardCloseClick);
+  // Закрытие карточки с клавиатуры
+  document.addEventListener('keydown', onPopupEscPress);
+  // Открыть карточку
+  var openPopup = function () {
+    mapCard.classList.remove('hidden');
+    document.addEventListener('keydown', onPopupEscPress);
+  };
   window.card = {
-    appendCard: function () {
-      return render(window.mapFilters.filteredData[0]);
+    renderAndOpen: function (clickedElement, pins) {
+      while (clickedElement !== pins) {
+        if (clickedElement.tagName === 'BUTTON') {
+          pinDeactivate();
+          clickedElement.classList.add('map__pin--active');
+          currentPin = clickedElement;
+          if (!clickedElement.classList.contains('map__pin--main')) {
+            render(window.mapFilters.filteredData[clickedElement.dataset.numPin]);
+            openPopup();
+          } else {
+            mapCard.classList.add('hidden');
+          }
+        }
+        clickedElement = clickedElement.parentNode;
+      }
+      return mapCard;
     }
   };
 })();
