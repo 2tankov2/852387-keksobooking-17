@@ -109,8 +109,7 @@
     document.addEventListener('keydown', onPopupEscPress);
   };
   window.card = {
-    renderAndOpen: function (element, pins) {
-      var clickedElement = element;
+    renderAndOpen: function (clickedElement, pins) {
       while (clickedElement !== pins) {
         if (clickedElement.tagName === 'BUTTON') {
           pinDeactivate();
