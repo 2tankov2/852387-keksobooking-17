@@ -49,9 +49,11 @@
         element.removeChild(childElement[j]);
       }
     }
+    var foto = element.querySelector('.popup__photo');
     if (photodArray.length === 0) {
-      element.querySelector('.popup__photo').classList.add('hidden');
+      foto.classList.add('hidden');
     } else {
+      foto.classList.remove('hidden');
       for (var i = 0; i < photodArray.length; i++) {
         if (i === 0) {
           element.querySelector('img').setAttribute('src', photodArray[i]);
