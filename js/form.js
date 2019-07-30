@@ -13,21 +13,15 @@
   var timeInHousing = form.querySelector('#timein');
   var timeOutHousing = form.querySelector('#timeout');
   var addressHousing = form.querySelector('#address');
-
-  // функция сброса полей в начальное состояние
-  var resetForm = function () {
-    // window.loadUpload.removeError();
-    titleHousing.value = '';
-    titleHousing.placeholder = 'Милая, но очень уютная квартирка в центре Токио';
-    window.form.setPinCoordinates();
-    // валидация поля "адрес"
-    addressHousing.setAttribute('readonly', 'readonly');
-    typeHousing.value = 'flat';
-    priceHousing.value = '5000';
-    timeInHousing.value = '12:00';
-    timeOutHousing.value = '12:00';
+  var roomNumberHousing = form.querySelector('#room_number');
+  var capacityHousing = form.querySelector('#capacity');
+  // Объект соответствия количества комнат количеству возможных гостей
+  var CapacityOfRoom = {
+    1: ['1'],
+    2: ['2', '1'],
+    3: ['3', '2', '1'],
+    100: ['0']
   };
-
   // синхронизация полей тип_жилья - цена, время_заезда - время_выезда
   var syncValues = function (element, value) {
     element.value = value;
@@ -88,9 +82,42 @@
     return priceHousing.setCustomValidity('');
   };
 
+  // Функции включения-выключения вариантов количества гостей
+  var activateCapacityOption = function (element) {
+    element.classList.remove('hidden');
+  };
+  var deactivateCapacityOption = function (element) {
+    element.classList.add('hidden');
+  };
+  // Изменение количества гостей в зависимости от изменения количества комнат
+  var onRoomNumberChange = function () {
+    var guests = CapacityOfRoom[roomNumberHousing.value];
+    [].forEach.call(capacityHousing.options, function (element) {
+      if (guests.includes(element.value)) {
+        activateCapacityOption(element);
+      } else {
+        deactivateCapacityOption(element);
+      }
+    });
+    capacityHousing.value = guests[0];
+  };
+  // Изменение количества комнат, если первоначально изменение было в количестве гостей
+  var onCapacityChange = function () {
+    var capacityValue = capacityHousing.value;
+    if (!CapacityOfRoom[roomNumberHousing.value].includes(capacityValue)) {
+      for (var key in CapacityOfRoom) {
+        if (CapacityOfRoom[key].includes(capacityValue)) {
+          roomNumberHousing.value = key;
+          onRoomNumberChange();
+          return;
+        }
+      }
+    }
+  };
+
   // отправка данных формы на сервер
   var onFormSubmit = function (evt) {
-    window.loadUpload.upload(new FormData(form), resetForm, window.loadUpload.onErrorLoad);
+    window.loadUpload.upload(new FormData(form), window.loadUpload.onSuccessMessage, window.loadUpload.onErrorLoad);
     evt.preventDefault();
   };
   // обработчик правильности заполнения заголовка
@@ -103,11 +130,31 @@
   timeInHousing.addEventListener('change', onTimeInChange);
   // обработчик изменения времени выезда
   timeOutHousing.addEventListener('change', onTimeOutChange);
+  // Событие изменения количества комнат
+  roomNumberHousing.addEventListener('change', onRoomNumberChange);
+  // Событие изменения количества гостей
+  capacityHousing.addEventListener('change', onCapacityChange);
   // обработчик отправки формы на сервер
   form.addEventListener('submit', onFormSubmit);
 
   window.form = {
-  // записываем координаты главной метки в поле адреса формы
+    // функция сброса полей в начальное состояние
+    resetForm: function () {
+    // window.loadUpload.removeError();
+      titleHousing.value = '';
+      titleHousing.placeholder = 'Милая, но очень уютная квартирка в центре Токио';
+      window.form.setPinCoordinates();
+      // валидация поля "адрес"
+      addressHousing.setAttribute('readonly', 'readonly');
+      typeHousing.value = 'flat';
+      priceHousing.placeholder = '1000';
+      priceHousing.value = '';
+      timeInHousing.value = '12:00';
+      timeOutHousing.value = '12:00';
+      roomNumberHousing.value = '1';
+      capacityHousing.value = '1';
+    },
+    // записываем координаты главной метки в поле адреса формы
     setPinCoordinates: function () {
       addressHousing.value = window.coordsPinMain.getCoords();
     },
@@ -125,6 +172,7 @@
       [].forEach.call(fieldsetForm, function (element) {
         element.setAttribute('disabled', 'disabled');
       });
+      window.form.resetForm();
     }
   };
 })();

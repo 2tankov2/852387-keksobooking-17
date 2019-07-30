@@ -5,7 +5,25 @@
   var CODE_SUCSESS = 200;
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var errorElement = errorTemplate.cloneNode(true);
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
+  var successElement = successTemplate.cloneNode(true);
   var blockMain = document.querySelector('main');
+  // Скрывает сообщение об успешной отправке данных
+  var successMessageHide = function () {
+    blockMain.removeChild(successElement);
+  };
+  // Обработчики событий при успешной отправке данных
+  var onSuccessKeyDown = function (evt) {
+    if (evt.keyCode === 27) {
+      successMessageHide();
+      window.form.resetForm();
+    }
+  };
+  var onSuccessMessageClick = function () {
+    successMessageHide();
+    window.form.resetForm();
+  };
+
   // Путь на сервер
   var URL = 'https://js.dump.academy/keksobooking';
   // Функция создания запроса к серверу
@@ -47,6 +65,12 @@
     onErrorLoad: function () {
       // Элемент DOM-дерева для вывода сообщений об ошибках
       blockMain.appendChild(errorElement);
+    },
+    onSuccessMessage: function () {
+      document.addEventListener('keydown', onSuccessKeyDown);
+      successElement.addEventListener('click', onSuccessMessageClick);
+      // Элемент DOM-дерева для вывода сообщений об успешной отправке формы
+      blockMain.appendChild(successElement);
     }
   };
 })();
