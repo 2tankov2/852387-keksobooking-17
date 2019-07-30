@@ -49,11 +49,11 @@
         element.removeChild(childElement[j]);
       }
     }
-    var foto = element.querySelector('.popup__photo');
+    var photo = element.querySelector('.popup__photo');
     if (photodArray.length === 0) {
-      foto.classList.add('hidden');
+      photo.classList.add('hidden');
     } else {
-      foto.classList.remove('hidden');
+      photo.classList.remove('hidden');
       for (var i = 0; i < photodArray.length; i++) {
         if (i === 0) {
           element.querySelector('img').setAttribute('src', photodArray[i]);

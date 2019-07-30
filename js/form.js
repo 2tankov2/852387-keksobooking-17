@@ -147,7 +147,7 @@
       // валидация поля "адрес"
       addressHousing.setAttribute('readonly', 'readonly');
       typeHousing.value = 'flat';
-      priceHousing.placeholder = '5000';
+      priceHousing.placeholder = '1000';
       priceHousing.value = '';
       timeInHousing.value = '12:00';
       timeOutHousing.value = '12:00';
