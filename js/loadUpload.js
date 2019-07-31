@@ -5,23 +5,40 @@
   var CODE_SUCSESS = 200;
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var errorElement = errorTemplate.cloneNode(true);
+  var buttonErrorElement = errorElement.querySelector('.error__button');
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
   var successElement = successTemplate.cloneNode(true);
   var blockMain = document.querySelector('main');
-  // Скрывает сообщение об успешной отправке данных
-  var successMessageHide = function () {
-    blockMain.removeChild(successElement);
+  // Скрывает страницу сообщени
+  var hide = function (element) {
+    blockMain.removeChild(element);
   };
-  // Обработчики событий при успешной отправке данных
+  // функции для бработки событий при ошибке
+  var onErrorKeyDown = function (evt) {
+    if (evt.keyCode === 27) {
+      hide(errorElement);
+      window.map.setDeactivePage();
+    }
+  };
+  var onErrorMessageClick = function () {
+    hide(errorElement);
+    window.map.setDeactivePage();
+  };
+  var onButtonCkick = function (evt) {
+    evt.preventDefault();
+    hide(errorElement);
+    window.map.setDeactivePage();
+  };
+  // функции для обработки событий при успешной отправке данных
   var onSuccessKeyDown = function (evt) {
     if (evt.keyCode === 27) {
-      successMessageHide();
-      window.form.resetForm();
+      hide(successElement);
+      window.map.setDeactivePage();
     }
   };
   var onSuccessMessageClick = function () {
-    successMessageHide();
-    window.form.resetForm();
+    hide(successElement);
+    window.map.setDeactivePage();
   };
 
   // Путь на сервер
@@ -67,10 +84,15 @@
       blockMain.appendChild(errorElement);
     },
     onSuccessMessage: function () {
-      document.addEventListener('keydown', onSuccessKeyDown);
-      successElement.addEventListener('click', onSuccessMessageClick);
       // Элемент DOM-дерева для вывода сообщений об успешной отправке формы
       blockMain.appendChild(successElement);
+    },
+    removeMessage: function () {
+      document.addEventListener('keydown', onErrorKeyDown);
+      errorElement.addEventListener('click', onErrorMessageClick);
+      buttonErrorElement.addEventListener('click', onButtonCkick);
+      document.addEventListener('keydown', onSuccessKeyDown);
+      successElement.addEventListener('click', onSuccessMessageClick);
     }
   };
 })();

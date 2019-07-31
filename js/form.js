@@ -143,7 +143,7 @@
     // window.loadUpload.removeError();
       titleHousing.value = '';
       titleHousing.placeholder = 'Милая, но очень уютная квартирка в центре Токио';
-      window.form.setPinCoordinates();
+      addressHousing.value = window.coordsPinMain.resetCoords();
       // валидация поля "адрес"
       addressHousing.setAttribute('readonly', 'readonly');
       typeHousing.value = 'flat';
@@ -156,7 +156,7 @@
     },
     // записываем координаты главной метки в поле адреса формы
     setPinCoordinates: function () {
-      addressHousing.value = window.coordsPinMain.getCoords();
+      addressHousing.value = window.coordsPinMain.getCoordsState();
     },
     // активация формы
     active: function () {
@@ -165,7 +165,6 @@
         element.removeAttribute('disabled', 'disabled');
         addressHousing.setAttribute('readonly', 'readonly');
       });
-      window.form.setPinCoordinates();
     },
     // начальное состояние страницы
     initState: function () {
