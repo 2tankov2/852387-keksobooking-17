@@ -102,8 +102,6 @@
     if (window.mapFilters.filteredData.length < TAKE_NUMBER_PIN) {
       window.mapFilters.filteredData = window.mapFilters.filteredData.concat(dataCopy).slice(0, TAKE_NUMBER_PIN);
     }
-
-
     // выводим метки после тайм-аута
     window.debounce(window.map.appendPins);
   };
