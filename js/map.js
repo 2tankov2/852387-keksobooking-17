@@ -29,7 +29,7 @@
   // загрузка данных
   var onSuccessLoad = function (data) {
     window.mapFilters.transferData(data);
-    // window.loadUpload.removeError();
+    window.loadUpload.removeMessage();
     window.mapFilters.filteredData.forEach(window.pin.render, pinsFragment);
     // доступ пользователю
     window.coordsPinMain.pinGlobal.addEventListener('mouseup', setActivePage);
@@ -43,6 +43,20 @@
   contanerMap.insertBefore(cardFragment.appendChild(window.card.renderAndOpen(window.coordsPinMain.pinGlobal, pinsList)), filtersContainer);
   // Клик на маркер ловим на контейнере
   pinsList.addEventListener('click', onPinClick);
+
+  var removeCard = function () {
+    var card = contanerMap.querySelector('.map__card');
+    if (card) {
+      card.remove();
+    }
+  };
+
+  var removePins = function () {
+    var pins = pinsList.querySelectorAll('.map__pin:not(.map__pin--main)');
+    pins.forEach(function (pin) {
+      pinsList.removeChild(pin);
+    });
+  };
 
   window.map = {
     // функия добавления маркеров на страницу
@@ -58,6 +72,13 @@
       window.mapFilters.filteredData.forEach(window.pin.render, pinsFragment);
       // добавляем метки на карту
       pinsList.appendChild(pinsFragment);
+    },
+    // деактивируем страницу
+    setDeactivePage: function () {
+      window.form.resetForm();
+      window.mapFilters.resetFeatures();
+      removeCard();
+      removePins();
     }
   };
 })();

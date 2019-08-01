@@ -8,6 +8,9 @@
   var widthMap = document.querySelector('.map').offsetWidth;
   // метка в центре карты
   var pinMain = document.querySelector('.map__pin--main');
+  // фиксируем начальные координаты гланой метки
+  var MAIN_PIN_LEFT = pinMain.offsetLeft;
+  var MAIN_PIN_TOP = pinMain.offsetTop;
   // сохраняем координаты главной метки в объект
   var pinMainLocation = {
     x: pinMain.getBoundingClientRect().left + PINMAIN_WIDTH / 2,
@@ -74,11 +77,19 @@
   };
   // перетаскиваем главную метку
   pinMain.addEventListener('mousedown', onPinMainMousedown);
+  var getCoords = function (x, y) {
+    return Math.round(x) + ', ' + Math.round(y + pageXOffset);
+  };
   // экспортируем координаты для ввода адреса в форму
   window.coordsPinMain = {
     pinGlobal: pinMain,
-    getCoords: function () {
-      return Math.round(pinMainLocation.x) + ', ' + Math.round(pinMainLocation.y + pageXOffset);
+    getCoordsState: function () {
+      return getCoords(pinMainLocation.x, pinMainLocation.y);
+    },
+    resetCoords: function () {
+      pinMain.style.left = MAIN_PIN_LEFT + 'px';
+      pinMain.style.top = MAIN_PIN_TOP + 'px';
+      return getCoords(MAIN_PIN_LEFT, MAIN_PIN_TOP);
     }
   };
 })();
