@@ -76,6 +76,7 @@
     // деактивируем страницу
     setDeactivePage: function () {
       window.form.resetForm();
+      window.mapFilters.resetFeatures();
       removeCard();
       removePins();
     }

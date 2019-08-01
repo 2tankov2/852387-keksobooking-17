@@ -15,6 +15,7 @@
   var addressHousing = form.querySelector('#address');
   var roomNumberHousing = form.querySelector('#room_number');
   var capacityHousing = form.querySelector('#capacity');
+  var features = form.querySelectorAll('input[type="checkbox"]');
   // Объект соответствия количества комнат количеству возможных гостей
   var CapacityOfRoom = {
     1: ['1'],
@@ -114,7 +115,6 @@
       }
     }
   };
-
   // отправка данных формы на сервер
   var onFormSubmit = function (evt) {
     window.loadUpload.upload(new FormData(form), window.loadUpload.onSuccessMessage, window.loadUpload.onErrorLoad);
@@ -153,6 +153,12 @@
       timeOutHousing.value = '12:00';
       roomNumberHousing.value = '1';
       capacityHousing.value = '1';
+      [].forEach.call(capacityHousing.options, function (element) {
+        element.classList.remove('hidden');
+      });
+      [].forEach.call(features, function (element) {
+        element.checked = false;
+      });
     },
     // записываем координаты главной метки в поле адреса формы
     setPinCoordinates: function () {

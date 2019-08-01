@@ -4,12 +4,13 @@
   // размеры главной метки
   var PINMAIN_WIDTH = 65;
   var PINMAIN_HEIGHT = 87;
-  var MAIN_PIN_LEFT = 570;
-  var MAIN_PIN_TOP = 375;
   // ширина карты
   var widthMap = document.querySelector('.map').offsetWidth;
   // метка в центре карты
   var pinMain = document.querySelector('.map__pin--main');
+  // фиксируем начальные координаты гланой метки
+  var MAIN_PIN_LEFT = pinMain.offsetLeft;
+  var MAIN_PIN_TOP = pinMain.offsetTop;
   // сохраняем координаты главной метки в объект
   var pinMainLocation = {
     x: pinMain.getBoundingClientRect().left + PINMAIN_WIDTH / 2,
