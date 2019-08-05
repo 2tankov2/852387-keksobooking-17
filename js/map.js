@@ -2,11 +2,11 @@
 
 (function () {
   // главная часть - карта
-  var contanerMap = document.querySelector('.map');
+  var containerMap = document.querySelector('.map');
   // список маркеров на карте
-  var pinsList = contanerMap.querySelector('.map__pins');
+  var pinsList = containerMap.querySelector('.map__pins');
   // блок с фильтрами
-  var filtersContainer = contanerMap.querySelector('.map__filters-container');
+  var filtersContainer = containerMap.querySelector('.map__filters-container');
   // фрагмент документа с маркерами для вставки
   var pinsFragment = document.createDocumentFragment();
   // фрагмент документа с карточкой для вставки
@@ -14,7 +14,8 @@
   // нажатие на гланый маркер и активация страницы
   var setActivePage = function () {
     // убираем класс 'map--faded' у катры
-    contanerMap.classList.remove('map--faded');
+    containerMap.classList.remove('map--faded');
+    window.mapFilters.filteredData.forEach(window.pin.render, pinsFragment);
     // добавляем маркеры для вставки в документ
     pinsList.appendChild(pinsFragment);
     // активируем форму
@@ -40,16 +41,9 @@
   // загружаем данные с сервера
   window.loadUpload.load(onSuccessLoad, window.loadUpload.onErrorLoad);
   // Добавляем карточку недвижимости на страницу и скрываем ее
-  contanerMap.insertBefore(cardFragment.appendChild(window.card.renderAndOpen(window.coordsPinMain.pinGlobal, pinsList)), filtersContainer);
+  containerMap.insertBefore(cardFragment.appendChild(window.card.renderAndOpen(window.coordsPinMain.pinGlobal, pinsList)), filtersContainer);
   // Клик на маркер ловим на контейнере
   pinsList.addEventListener('click', onPinClick);
-
-  var removeCard = function () {
-    var card = contanerMap.querySelector('.map__card');
-    if (card) {
-      card.remove();
-    }
-  };
 
   var removePins = function () {
     var pins = pinsList.querySelectorAll('.map__pin:not(.map__pin--main)');
@@ -74,11 +68,13 @@
       pinsList.appendChild(pinsFragment);
     },
     // деактивируем страницу
-    setDeactivePage: function () {
+    setDeactivatePage: function () {
       window.form.resetForm();
       window.mapFilters.resetFeatures();
-      removeCard();
+      window.card.removeCard();
       removePins();
+      containerMap.classList.add('map--faded');
+      window.form.initState();
     }
   };
 })();

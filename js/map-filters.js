@@ -3,6 +3,9 @@
 (function () {
   // количество показываемых меток на карте
   var TAKE_NUMBER_PIN = 5;
+  // пределы цены
+  var PRICE_MIN = 10000;
+  var PRICE_MAX = 50000;
   // рабочая копия массива полученных с сервера данных
   var dataCopy = [];
   // текущие значения фильтров
@@ -39,17 +42,17 @@
           break;
         case 'low':
           arr = arr.filter(function (element) {
-            return element.offer.price <= 10000;
+            return element.offer.price <= PRICE_MIN;
           });
           break;
         case 'high':
           arr = arr.filter(function (element) {
-            return element.offer.price >= 50000;
+            return element.offer.price >= PRICE_MAX;
           });
           break;
         case 'middle':
           arr = arr.filter(function (element) {
-            return (element.offer.price > 10000) && (element.offer.price < 50000);
+            return (element.offer.price > PRICE_MIN) && (element.offer.price < PRICE_MAX);
           });
       }
       return arr;
@@ -99,12 +102,10 @@
       window.mapFilters.filteredData = getFiltered(window.mapFilters.filteredData);
     });
     // выводим необходимое кол-во элементов
-    if (window.mapFilters.filteredData.length < TAKE_NUMBER_PIN) {
-      window.mapFilters.filteredData = window.mapFilters.filteredData.slice(0, TAKE_NUMBER_PIN).concat(dataCopy);
-    }
     if (window.mapFilters.filteredData.length > TAKE_NUMBER_PIN) {
       window.mapFilters.filteredData = window.mapFilters.filteredData.slice(0, TAKE_NUMBER_PIN);
     }
+    window.card.removeCard();
     // выводим метки после тайм-аута
     window.debounce(window.map.appendPins);
   };

@@ -28,13 +28,13 @@
     }
   };
   // функции определения позиции метки в пределах карты
-  var getPosition = function (coordinate, shift, minValue, maxVaue) {
+  var getPosition = function (coordinate, shift, minValue, maxValue) {
     if ((coordinate - shift) < minValue) {
       return minValue + 'px';
     }
 
-    if ((coordinate - shift) > maxVaue) {
-      return maxVaue + 'px';
+    if ((coordinate - shift) > maxValue) {
+      return maxValue + 'px';
     }
 
     return (coordinate - shift) + 'px';
@@ -89,7 +89,7 @@
     resetCoords: function () {
       pinMain.style.left = MAIN_PIN_LEFT + 'px';
       pinMain.style.top = MAIN_PIN_TOP + 'px';
-      return getCoords(pinMainLocation.x, pinMainLocation.y);
+      return getCoords(MAIN_PIN_LEFT, MAIN_PIN_TOP);
     }
   };
 })();

@@ -27,7 +27,7 @@
   var syncValues = function (element, value) {
     element.value = value;
   };
-  var syncValueWhithMin = function (element, value) {
+  var syncValueWithMin = function (element, value) {
     element.min = value;
     element.placeholder = value;
   };
@@ -53,7 +53,7 @@
   };
   // автосинхронизация "типа жилья" и "цены за ночь"
   var onTypeChange = function () {
-    window.util.synchronFields(typeHousing, priceHousing, HOUSE_TYPE, MIN_PRICES, syncValueWhithMin);
+    window.util.synchronFields(typeHousing, priceHousing, HOUSE_TYPE, MIN_PRICES, syncValueWithMin);
   };
   // автосинхронизация "время заезда" и "время выезда"
   var onTimeInChange = function () {
@@ -120,6 +120,11 @@
     window.loadUpload.upload(new FormData(form), window.loadUpload.onSuccessMessage, window.loadUpload.onErrorLoad);
     evt.preventDefault();
   };
+  // сбос данных формы
+  var onFormReset = function (evt) {
+    window.map.setDeactivatePage();
+    evt.preventDefault();
+  };
   // обработчик правильности заполнения заголовка
   titleHousing.addEventListener('invalid', createValidTitle);
   // обработчик правильности заполнения стоимости за ночь
@@ -136,6 +141,8 @@
   capacityHousing.addEventListener('change', onCapacityChange);
   // обработчик отправки формы на сервер
   form.addEventListener('submit', onFormSubmit);
+  // обработчик сброса формы
+  form.addEventListener('reset', onFormReset);
 
   window.form = {
     // функция сброса полей в начальное состояние
@@ -178,6 +185,7 @@
         element.setAttribute('disabled', 'disabled');
       });
       window.form.resetForm();
+      form.classList.add('ad-form--disabled');
     }
   };
 })();

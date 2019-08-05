@@ -7,10 +7,10 @@
   // метка на карте - шаблон
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   // координаты учитывая смещение из-за размера меток
-  var pinCoorX = function (x) {
+  var pinCoordX = function (x) {
     return (x - PIN_WIDTH / 2) + 'px';
   };
-  var pinCoorY = function (y) {
+  var pinCoordY = function (y) {
     return (y - PIN_HEIGHT) + 'px';
   };
   // функция формирования метки
@@ -19,8 +19,8 @@
       var pinElement = pinTemplate.cloneNode(true);
       var pinImgElement = pinElement.querySelector('img');
 
-      pinElement.style.left = pinCoorX(pinData.location.x);
-      pinElement.style.top = pinCoorY(pinData.location.y);
+      pinElement.style.left = pinCoordX(pinData.location.x);
+      pinElement.style.top = pinCoordY(pinData.location.y);
       pinElement.alt = 'заголовок объявления';
       pinImgElement.src = pinData.author.avatar;
       pinImgElement.title = pinData.offer.title;
