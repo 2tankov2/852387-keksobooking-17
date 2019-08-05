@@ -89,7 +89,7 @@
     resetCoords: function () {
       pinMain.style.left = MAIN_PIN_LEFT + 'px';
       pinMain.style.top = MAIN_PIN_TOP + 'px';
-      return getCoords(MAIN_PIN_LEFT, MAIN_PIN_TOP);
+      return getCoords(pinMainLocation.x, pinMainLocation.y);
     }
   };
 })();
